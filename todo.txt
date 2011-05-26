@@ -1,0 +1,25 @@
+1. Evaluators:
+	1.1 Center of Mass
+	1.2 Connected groups
+
+2. Heuristics:
+	a) Kinds:
+		* MaxDepth heuristics (utility)
+			Weighted sum of evaluators
+		* Selective (choice) h to define which node to explore
+		
+	b)
+	
+3. Algorithm 
+	a)Features:
+		* Iterative digging (quiescence search)
+		* states dictionary (TranspositionsTable)
+	b)
+		3.1 Get All successors
+		3.2 Sort them by selective heuristics (Node reordering)
+		3.3 Save results in TranspositionsTable
+		3.4 Calculate QuadValueTableExt (state info, number of connected states, iteratice information using action)
+	
+	
+	
+	 

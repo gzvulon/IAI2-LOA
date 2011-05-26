@@ -55,6 +55,7 @@ class LinesOfActionState(GameState):
                         action, state = self._getSpinAction(spin[0], spin[1])
                         if action is not None:
                             successors[action] = state
+        print len(successors)
         return successors
     
     def getCurrentPlayer(self):
