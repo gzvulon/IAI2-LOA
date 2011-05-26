@@ -30,6 +30,7 @@ class AlphaBetaSearch:
         best_value = -INFINITY
         
         for action, state in current_state.getSuccessors().items():
+            # TODO: here we have an action, hence we can pass it to heuristic fn
             value_fn = self._getValueFn(state)
             value = value_fn(state, best_value, INFINITY, 1)
             if value > best_value:
@@ -55,8 +56,8 @@ class AlphaBetaSearch:
         for successor in state.getSuccessors().values():
             value_fn = self._getValueFn(successor)
             value = max(value, value_fn(successor, alpha, beta, depth + 1))
-            if value >= beta:
-                return value
+            if value >= beta: # cut
+                return value 
             alpha = max(alpha, value)
         
         return value
@@ -69,7 +70,7 @@ class AlphaBetaSearch:
         for successor in state.getSuccessors().values():
             value_fn = self._getValueFn(successor)
             value = min(value, value_fn(successor, alpha, beta, depth + 1))
-            if value <= alpha:
+            if value <= alpha: # cut
                 return value
             beta = min(beta, value)
         

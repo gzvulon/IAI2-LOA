@@ -10,7 +10,7 @@ def simple_heuristic(player):
     @param player: player 
 
     @return: heuristics functions for provided player
-    @type return: fn: state -> double in range [-1;1]
+    @type return: fn: state -> double in range [-1.0;1.0]
     '''
     def the_heuristic(state):
         winner = state.getWinner()
