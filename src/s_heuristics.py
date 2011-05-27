@@ -4,15 +4,11 @@ Created on May 26, 2011
 
 @author: inesmeya
 """
+from s_eval_mass import CenterMassEvaluator
 
-def simple_heuristic(player):
-    '''
-    @param player: player 
 
-    @return: heuristics functions for provided player
-    @type return: fn: state -> double in range [-1.0;1.0]
-    '''
-    def the_heuristic(state):
+
+def winner_heuristics(state,player):
         winner = state.getWinner()
         if winner is None:
             return 0
@@ -20,5 +16,15 @@ def simple_heuristic(player):
             return 1
         else:
             return -1
-    
-    return the_heuristic
+
+def make_simple_heuristic(player):
+    '''
+    @param player: player 
+
+    @return: heuristics functions for provided player
+    @type return: fn: state -> double in range [-1.0;1.0]
+    '''
+    def the_heuristic(state):
+        return winner_heuristics(player,state)
+
+    return the_heuristic    

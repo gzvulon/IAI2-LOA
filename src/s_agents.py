@@ -6,8 +6,8 @@ Created on May 26, 2011
 """
 from game_agent import GameAgent
 from s_alpha_beta import AlphaBetaSearch
-from s_heuristics import simple_heuristic
 from loa_game import SpinAction, Direction, DIRECTIONS, MoveAction
+from s_heuristics import make_simple_heuristic
 
 class AlphaBetaAgent(GameAgent):
     def move(self, game_state):
@@ -15,7 +15,7 @@ class AlphaBetaAgent(GameAgent):
     
     def setup(self, player, game_state, turn_time_limit, setup_time_limit):
         self.player = player
-        h = simple_heuristic(player)
+        h = make_simple_heuristic(player)
         self.alphaBeta = AlphaBetaSearch(self.player, 3, h)
         
 class InteractiveAgent(GameAgent):
@@ -55,3 +55,11 @@ class InteractiveAgent(GameAgent):
     
     def setup(self, player, game_state, turn_time_limit, setup_time_limit):
         self.player = player
+
+class DummyAgent(GameAgent):
+    def move(self, game_state):
+        for action in game_state.getSuccessors().keys():
+            return action
+    
+    def setup(self, player, game_state, turn_time_limit, setup_time_limit):
+        return
