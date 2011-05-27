@@ -7,14 +7,7 @@ Created on May 26, 2011
 
 from loa_game import WHITE, BLACK, EMPTY
 
-def simple_heuristic(player):
-    '''
-    @param player: player 
-
-    @return: heuristics functions for provided player
-    @type return: fn: state -> double in range [-1.0;1.0]
-    '''
-    def the_heuristic(state):
+def winner_heuristics(state,player):
         winner = state.getWinner()
         if winner is None:
             return 0
@@ -22,18 +15,19 @@ def simple_heuristic(player):
             return 1
         else:
             return -1
-    
-    return the_heuristic
 
-def not_simple_heuristic(player):
-    
-    def the_heuristic(state, quadTable):
-        groups_bonus = 0    
-        for x in range(-1, state.size):
-            for y in range(-1, state.size):
-                quadType = quadTable.quads[(x,y)]
-                if quadType == 'Q3' or quadType == 'Q4':
-                    groups_bonus += 1
+def make_simple_heuristic(player):
+    '''
+    @param player: player 
+
+    @return: heuristics functions for provided player
+    @type return: fn: state -> double in range [-1.0;1.0]
+    '''
+    def the_heuristic(state):
+        return winner_heuristics(player,state)
+
+    return the_heuristic    
+
 # -*- coding:utf-8 -*-
 """
 Created on May 26, 2011
