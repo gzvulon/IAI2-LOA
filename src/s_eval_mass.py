@@ -9,7 +9,7 @@ from loa_game import LinesOfActionState, WHITE, BLACK, EMPTY
 
 class CenterMassEvaluator(Evaluator):
     
-    def board_to_coord_repr(self,state):
+    def state_to_coord_repr(self,state):
         ''' Converts board matrix to two lists with checkers coordinates
         @param state.board: (row1,row2,...,rowN)
                       rowX = (EMPTY,WHITE,BLACK,..,<CELL_N>)
@@ -28,25 +28,30 @@ class CenterMassEvaluator(Evaluator):
                 x += 1
             y+=1
         
-                    
-                
     
-    def center_of_mass_from_coord_list(self,board,size):
+    def center_of_mass_from_coord_list(self,coord_list):
+        ''' calculate center of mass from coord_list
+        @param coord_list: [(x,y),(x,y),...]
+                  (x,y) = coordinates of checker
+        @return: (x,y) of center mass
         '''
-        @param board: [row1,row2,...,rowN]
-                      rowX = (EMPTY,WHITE,BLACK,..,<CELL_N>)
-        @param size:  board width (== height)
-        @return: 
-        '''
-        
+        X,Y = 0,0
+        n = len(coord_list)
+        for x,y in coord_list:
+            X += x
+            Y += y
+        cx,cy = X/n,Y/n
+        return (cx,cy)
         
     
-    def evaluate(self, state, action =None, quad_table_ext=None):
+    def evaluate(self, state, player, action =None, quad_table_ext=None):
         '''
         @type state: loa_game.LinesOfActionState
         '''
+        coord_repr = self.state_to_coord_repr(state)
+        
+        
         # calculate center of mass
-        s = LinesOfActionState()
-        s.blacks
+        
 
     
