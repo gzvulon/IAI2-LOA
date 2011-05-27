@@ -13,6 +13,8 @@ class Evaluator():
         @param quad_table_ext: aditional iterative information:
             dictionary? or struct with field for each evaluator
         Those can be None for eample at the beggining of the game
+        
+        @return: double between -1 and 1
         '''
         raise Exception("Not Implemented")
     
