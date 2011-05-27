@@ -42,7 +42,7 @@ class InteractiveAgent(GameAgent):
         if(action == 'SPIN'):
             res = SpinAction(row, col)
         else:
-            direction_idx = DIRECTIONS.index(Direction(action, (0, 0)))
+            direction_idx = DIRECTIONS.index(Direction(action, (0, 0))) #@UndefinedVariable
             res = MoveAction(row, col, DIRECTIONS[direction_idx])
         return res           
 

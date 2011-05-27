@@ -19,6 +19,18 @@ class Test(unittest.TestCase):
         self.quadTable1 = QuadTable(self.board5, 3, 'B')
         self.quadTable2 = QuadTable(self.board5, 3, 'W')
         
+        self.board6 = ( (' ',' ',' ',' ',' ',' ',' ',' ',) , 
+                        ('B',' ','B',' ',' ',' ',' ',' ',) , 
+                        (' ','B',' ',' ','W',' ',' ',' ',) , 
+                        (' ',' ',' ','W',' ','W',' ','B',) , 
+                        (' ',' ','W',' ','W',' ',' ',' ',) , 
+                        (' ','W',' ',' ','B',' ',' ',' ',) , 
+                        (' ',' ',' ',' ',' ',' ',' ',' ',) , 
+                        (' ',' ',' ',' ',' ',' ','W',' ',) )
+        
+        self.quadTable3 = QuadTable(self.board6, 8, 'B')
+        self.quadTable4 = QuadTable(self.board6, 8, 'W')
+        
     def tearDown(self):
         pass
 
@@ -39,18 +51,21 @@ class Test(unittest.TestCase):
 
     def testQuadBoardInit(self):
         self.assertEqual('Q1', self.quadTable1.getQuadType(-1, -1))
-        self.assertEqual('Q0', self.quadTable1.getQuadType(1, 0))
-        self.assertEqual('Qd', self.quadTable1.getQuadType(0, 1))
-        self.assertEqual('Q1', self.quadTable1.getQuadType(1, 2))
+        self.assertEqual('Q0', self.quadTable1.getQuadType(0, 1))
+        self.assertEqual('Qd', self.quadTable1.getQuadType(1, 0))
+        self.assertEqual('Q1', self.quadTable1.getQuadType(2, 1))
         self.assertEqual('Q2', self.quadTable1.getQuadType(0, 0))
-        self.assertEqual('Q2', self.quadTable1.getQuadType(-1, 0))
+        self.assertEqual('Q2', self.quadTable1.getQuadType(0, -1))
         
-        self.assertEqual('Q1', self.quadTable2.getQuadType(0, -1))
+        self.assertEqual('Q1', self.quadTable2.getQuadType(-1, 0))
         self.assertEqual('Q2', self.quadTable2.getQuadType(0, 0))
         self.assertEqual('Q3', self.quadTable2.getQuadType(1, 1))
-        self.assertEqual('Q2', self.quadTable2.getQuadType(2, 1))
+        self.assertEqual('Q2', self.quadTable2.getQuadType(1, 2))
         self.assertEqual('Q1', self.quadTable2.getQuadType(2, 2))
                 
+    def testEulerNumber(self):
+        self.assertEqual(3, self.quadTable3.eulerNumber())
+        self.assertEqual(1, self.quadTable4.eulerNumber())
 
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testName']
