@@ -50,6 +50,14 @@ class CenterMassEvaluator(Evaluator):
         '''
         coord_repr = self.state_to_coord_repr(state)
         
+        my_coord_list = coord_repr[player]
+        cx,cy = self.center_of_mass_from_coord_list(my_coord_list)
+        
+        
+        
+        
+        
+        
         
         # calculate center of mass
         
