@@ -17,5 +17,9 @@ agents[BLACK] = InteractiveAgent()
 
 state = LinesOfActionState(6, 50)
 
+print state.board
+print type(state.board)
+print type(state.board[0])
+
 winner = GameRunner(state, agents, INFINITY, 1).run()
 print 'Winner:', winner
