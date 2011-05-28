@@ -4,8 +4,9 @@ Created on May 27, 2011
 @author: shizki
 '''
 import unittest
-from s_quad_table import QuadTable, findQuadType, calcMoveDist
+from s_quad_table import QuadTable
 from loa_game import MoveAction, Direction
+from s_common_ops import findQuadType, calcMoveDist
 
 
 class Test(unittest.TestCase):
@@ -152,10 +153,10 @@ class Test(unittest.TestCase):
         move2 = MoveAction(2, 4, Direction("SW", (1, -1)))   
         self.assertEqual(4, calcMoveDist(move2, self.quadTable2.board, self.quadTable2.size))
 
-    
     def testUpdate(self):
         move1 = MoveAction(6, 0, Direction("E", (0, 1)))
-        self.assertEqual(3, self.quadTable2.calcMoveDist(move1))
+#        self.assertEqual(, self.quadTable3.update(state, action))
+
 
 def count_types(quadTable, player):
     count_types = {'Q0':0, 'Q1':0, 'Q2':0, 'Q3':0, 'Q4':0, 'Qd':0}
