@@ -8,6 +8,48 @@ from s_evaluator import Evaluator, UpdatableTable
 from loa_game import WHITE, BLACK, EMPTY
 import sys
 
+def initialize(board):
+        # {WHITE : [(x,y),(x1,y1),...], BLACK : [(x,y),(x1,y1),...]}
+        coord_repr = state_to_coord_repr(board)
+        # central of mass dict {WHITE : (x,y) , BLACK : [(x,y),(x1,y1),...]}
+        cm_dict ={}
+        cm_dict[WHITE] = center_of_mass_from_coord_list[coord_repr[WHITE]]
+        cm_dict[BLACK] = center_of_mass_from_coord_list[coord_repr[BLACK]]
+
+def state_to_coord_repr(board):
+    ''' Converts board matrix to two lists with checkers coordinates
+    @param state.board: (row1,row2,...,rowN)
+                  rowX = (EMPTY,WHITE,BLACK,..,<CELL_N>)
+    @param state.size:  board width (== height)
+    @return: {WHITE : white_coord_list, BLACK :black_coord_list}
+              X_coord_list = [(x,y),(x,y),...]
+              (x,y) = coordinates of checker
+    '''
+    res = {WHITE : [], BLACK : []}
+    y = 0
+    for row in board:
+        x = 0
+        for cell in row:
+            if cell != EMPTY:
+                res[cell].append((x,y))
+            x += 1
+        y+=1
+    return res
+
+def center_of_mass_from_coord_list(coord_list):
+    ''' calculate center of mass from coord_list
+    @param coord_list: [(x,y),(x,y),...]
+              (x,y) = coordinates of checker
+    @return: (x,y) of center mass
+    '''
+    X,Y = 0,0
+    n = len(coord_list)
+    for (x,y) in coord_list:
+        X += x
+        Y += y
+    cx,cy = X/n,Y/n
+    return (cx,cy)
+
 class CenterMassTable(UpdatableTable):
     
     def update(self,state, action, new_state):
@@ -15,47 +57,10 @@ class CenterMassTable(UpdatableTable):
         @param action:  
         '''
     
-    def __init__(self,board):
-        # {WHITE : [(x,y),(x1,y1),...], BLACK : [(x,y),(x1,y1),...]}
-        self.coord_repr = self.state_to_coord_repr(board)
-        # central of mass dict {WHITE : (x,y) , BLACK : [(x,y),(x1,y1),...]}
-        self.cm_dict ={}
-        self.cm_dict[WHITE] = self.center_of_mass_from_coord_list[self.coord_repr[WHITE]]
-        self.cm_dict[BLACK] = self.center_of_mass_from_coord_list[self.coord_repr[BLACK]]
+    def __init__(self,coord_repr,cm_dict):
+        self.coord_repr = coord_repr
+        self.cm_dict = cm_dict
 
-    def state_to_coord_repr(self,board):
-        ''' Converts board matrix to two lists with checkers coordinates
-        @param state.board: (row1,row2,...,rowN)
-                      rowX = (EMPTY,WHITE,BLACK,..,<CELL_N>)
-        @param state.size:  board width (== height)
-        @return: {WHITE : white_coord_list, BLACK :black_coord_list}
-                  X_coord_list = [(x,y),(x,y),...]
-                  (x,y) = coordinates of checker
-        '''
-        res = {WHITE : [], BLACK : []}
-        y = 0
-        for row in board:
-            x = 0
-            for cell in row:
-                if cell != EMPTY:
-                    res[cell].append((x,y))
-                x += 1
-            y+=1
-        return res
-    
-    def center_of_mass_from_coord_list(self,coord_list):
-        ''' calculate center of mass from coord_list
-        @param coord_list: [(x,y),(x,y),...]
-                  (x,y) = coordinates of checker
-        @return: (x,y) of center mass
-        '''
-        X,Y = 0,0
-        n = len(coord_list)
-        for (x,y) in coord_list:
-            X += x
-            Y += y
-        cx,cy = X/n,Y/n
-        return (cx,cy)
     
     def update(self,state, action, new_state):
         old_p = (0,0)
