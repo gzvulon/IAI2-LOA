@@ -63,3 +63,13 @@ class DummyAgent(GameAgent):
     
     def setup(self, player, game_state, turn_time_limit, setup_time_limit):
         return
+    
+
+class SmartAlphaBetaAgent(GameAgent):
+    def move(self, game_state):
+        return self.alphaBeta.search(game_state)
+    
+    def setup(self, player, game_state, turn_time_limit, setup_time_limit):
+        self.player = player
+        h = make_simple_heuristic(player)
+        self.alphaBeta = AlphaBetaSearch(self.player, 3, h)

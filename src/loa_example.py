@@ -2,7 +2,7 @@ from game_runner import GameRunner
 from loa_game import WHITE, BLACK, LinesOfActionState, SpinAction, MoveAction, DIRECTIONS, Direction
 from game_agent import GameAgent
 from alpha_beta import AlphaBetaSearch
-from code import interact
+
 
 class DummyAgent(GameAgent):
     def move(self, game_state):
@@ -32,7 +32,6 @@ class AlphaBetaAgent(GameAgent):
         
 class InteractiveAgent(GameAgent):
     def move(self, game_state):
-        print game_state
         inp = raw_input(self.player + ' turn. Enter <row col action> (action is N/NE/E/SE/S/SW/W/NW/SPIN): ')
         row, col, action = inp.split()
         row = int(row)

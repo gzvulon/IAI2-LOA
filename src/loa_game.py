@@ -55,7 +55,6 @@ class LinesOfActionState(GameState):
                         action, state = self._getSpinAction(spin[0], spin[1])
                         if action is not None:
                             successors[action] = state
-        #print len(successors)
         return successors
     
     def getCurrentPlayer(self):
@@ -68,9 +67,6 @@ class LinesOfActionState(GameState):
             return BLACK
     
     def getWinner(self):
-        if self.turns_left == 0:
-            return TIE
-        
         white_wins = None
         black_wins = None
         for row, row_data in enumerate(self.board):
@@ -86,10 +82,13 @@ class LinesOfActionState(GameState):
                     break
         
         if not white_wins and not black_wins:
-            return None
+            if self.turns_left == 0:
+                return TIE
+            else:
+                return None
         elif white_wins and not black_wins:
             return WHITE
-        elif  black_wins and not white_wins:
+        elif black_wins and not white_wins:
             return BLACK
         else:
             return TIE

@@ -33,6 +33,7 @@ class GameRunner():
                 raise Exception(str(player) + ' failed to set up in time.')
         
         state = self.initial_state
+        print state
         while state.getWinner() is None:
             agent = self.agents[state.getCurrentPlayer()]
             start = clock()
@@ -45,9 +46,10 @@ class GameRunner():
             if action not in successors.keys():
                 raise Exception(str(state.getCurrentPlayer()) + ' made an illegal move.')
             
+            print str(state.turns_left) + ' ' + str(state.getCurrentPlayer()) + ': ' + str(action)
+            
             state = successors[action]
             
-            print action
             print state
         
         return state.getWinner()
