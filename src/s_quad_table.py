@@ -30,14 +30,16 @@ class QuadTable():
             elif player == BLACK:
                 return self.black_quads[(x,y)]
         return None
-    
+
+
     def setQuadType(self, x, y, type, player):
         if x >= -1 and x < self.size and y >=-1 and y < self.size: 
             if player == WHITE:
                 self.white_quads[(x,y)] = type
             elif player == BLACK:
                 self.black_quads[(x,y)] = type
-    
+
+
     def eulerNumber(self, player):
         q1 = 0
         q3 = 0
@@ -60,7 +62,7 @@ class QuadTable():
         newQuadTable = copy(self)
         if isinstance(action, MoveAction):
             newQuadTable.movePiece(action)
-            
+
 
     def movePiece(self, action):
         from_x = action.col
