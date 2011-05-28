@@ -155,7 +155,7 @@ class Test(unittest.TestCase):
 
     def testUpdate(self):
         move1 = MoveAction(6, 0, Direction("E", (0, 1)))
-#        self.assertEqual(, self.quadTable3.update(state, action))
+        self.assertEqual(, self.quadTable3.update(state, action))
 
 
 def count_types(quadTable, player):
