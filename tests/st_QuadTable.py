@@ -4,7 +4,7 @@ Created on May 27, 2011
 @author: shizki
 '''
 import unittest
-from quad_table import findQuadType, QuadTable
+from s_quad_table import findQuadType, QuadTable
 
 
 class Test(unittest.TestCase):

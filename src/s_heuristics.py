@@ -79,17 +79,3 @@ def not_simple_heuristic(player):
                         
         
     return the_heuristic
-        edges_penalty = 0
-        for x in range(-1, state.size):
-            if state.board[0][x] != EMPTY:
-                edges_penalty += 1
-            if state.board[state.size-1][x] != EMPTY:
-                edges_penalty += 1
-        for y in range(-1, state.size):
-            if state.board[y][0] != EMPTY:
-                edges_penalty += 1
-            if state.board[y][state.size-1] != EMPTY:
-                edges_penalty += 1                
-                        
-        
-    return the_heuristic
