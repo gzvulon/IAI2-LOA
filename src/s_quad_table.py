@@ -36,8 +36,6 @@ class QuadTable():
                     print x, ',', y
                     qd += 1
                     
-                    
-        print 'W:', 'Q1 = ', q1, 'Q3 = ', q3, 'Qd = ', qd
         return float(q1-q3-2*qd)/4
 
 def findQuadType(x, y, board, size, player):
@@ -68,5 +66,3 @@ def findQuadType(x, y, board, size, player):
                 return 'Q2'
         else:
             return 'Q2'
-        
-        
