@@ -59,19 +59,13 @@ class QuadTable():
         newQuadTable = copy(self)
         if isinstance(action, MoveAction):
             newQuadTable.movePiece(action, state.getCurrentPlayer)
-        
-        
-        newQuadTable.movePiece
-    
+            
 
     def movePiece(self, action, player):
         from_x = action.col
         from_y = action.row
         
-        dist = self.calcMoveDist(action, player)
-        
-        to_x = from_x + dist*action.direction.delta[0]
-        to_y = from_y + dist*action.direction.delta[1]
+        to_y, to_x = findDest(action, board, size)
         
         self.board[from_y][from_x] = EMPTY
         if self.board[to_y][to_x] == other_player(player):
@@ -79,43 +73,50 @@ class QuadTable():
             
         self.board[to_y][to_x] = player
         
-        self.updateCellSurroundings(from_x, from_y, player)
-        self.updateCellSurroundings(to_x, to_y, player)
+        self.updateSurroundingCells(from_x, from_y, player)
+        self.updateSurroundingCells(to_x, to_y, player)
         if capture:
-            self.updateCellSurroundings(to_x, to_y, other_player(player))
+            self.updateSurroundingCells(to_x, to_y, other_player(player))
 
 
-    def calcMoveDist(self, action):
-#        print '----'
-        dist = 0
-        x = action.col
-        y = action.row
-        while x >= 0 and y >= 0 and x < self.size and y < self.size:
-#            print '(',x,',',y,') = ', self.board[y][x]
-            if self.board[y][x] != EMPTY:
-                dist += 1
-            x += action.direction.delta[1]
-            y += action.direction.delta[0]
-        
-#        print '+++'
 
-        x = action.col
-        y = action.row
-        while x >= 0 and y >= 0 and x < self.size and y < self.size:
-#            print '(',x,',',y,') = ', self.board[y][x]
-            if self.board[y][x] != EMPTY:
-                dist += 1
-            x += -action.direction.delta[1]
-            y += -action.direction.delta[0]
-        
-        return dist - 1
 
-    def updateCellSurroundings(self, x, y, player):
+    def updateSurroundingCells(self, x, y, player):
         self.setQuadType(x, y, findQuadType(x, y, self.board, self.size, player), player)
         self.setQuadType(x-1, y, findQuadType(x-1, y, self.board, self.size, player), player)
         self.setQuadType(x, y-1, findQuadType(x, y-1, self.board, self.size, player), player)
         self.setQuadType(x-1, y-1, findQuadType(x-1, y-1, self.board, self.size, player), player)
+
+def findDest(action):
+    dist = calcMoveDist(action)
+    to_x = action.col + dist * action.direction.delta[1]
+    to_y = action.row + dist * action.direction.delta[0]
+    return to_y, to_x
         
+def calcMoveDist(action, board, size):
+#        print '----'
+    dist = 0
+    x = action.col
+    y = action.row
+    while x >= 0 and y >= 0 and x < size and y < size:
+#            print '(',x,',',y,') = ', board[y][x]
+        if board[y][x] != EMPTY:
+            dist += 1
+        x += action.direction.delta[1]
+        y += action.direction.delta[0]
+    
+#        print '+++'
+
+    x = action.col
+    y = action.row
+    while x >= 0 and y >= 0 and x < size and y < size:
+#            print '(',x,',',y,') = ', board[y][x]
+        if board[y][x] != EMPTY:
+            dist += 1
+        x += -action.direction.delta[1]
+        y += -action.direction.delta[0]
+    
+    return dist - 1
              
 def findQuadType(x, y, board, size, player):
     filled = 0

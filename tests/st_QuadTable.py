@@ -4,7 +4,7 @@ Created on May 27, 2011
 @author: shizki
 '''
 import unittest
-from s_quad_table import QuadTable, findQuadType
+from s_quad_table import QuadTable, findQuadType, calcMoveDist
 from loa_game import MoveAction, Direction
 
 
@@ -41,7 +41,40 @@ class Test(unittest.TestCase):
   
         self.quadTable3 = QuadTable(self.board7, 8)
         
-        
+        self.board8 = ( (' ','W','W','W','W','W','W',' ',) , 
+                        ('B',' ',' ',' ',' ',' ',' ','B',) , 
+                        ('B',' ',' ',' ',' ',' ',' ','B',) , 
+                        ('B',' ',' ',' ',' ',' ',' ','B',) , 
+                        ('B',' ',' ',' ',' ',' ',' ','B',) , 
+                        ('B',' ',' ',' ',' ',' ',' ','B',) , 
+                        (' ',' ','B',' ',' ',' ',' ','B',) , 
+                        (' ','W','W','W','W','W','W',' ',) )
+  
+        self.quadTable4 = QuadTable(self.board7, 8)
+
+        self.board9 = ( (' ','W','W',' ','W','W','W',' ',) , 
+                        ('B',' ',' ',' ',' ',' ',' ','B',) , 
+                        ('B','W',' ',' ',' ',' ',' ','B',) , 
+                        ('B',' ',' ',' ',' ',' ',' ','B',) , 
+                        ('B',' ',' ',' ',' ',' ',' ','B',) , 
+                        ('B',' ',' ',' ',' ',' ',' ','B',) , 
+                        (' ',' ','B',' ',' ',' ',' ','B',) , 
+                        (' ','W','W','W','W','W','W',' ',) )
+  
+        self.quadTable5 = QuadTable(self.board7, 8)
+
+        self.board10 = (   (' ', 'W', 'W', 'W', 'W', 'W', 'W', ' '),
+                           ('B', ' ', ' ', ' ', ' ', ' ', ' ', 'B'),
+                           (' ', ' ', ' ', ' ', ' ', ' ', ' ', 'B'),
+                           (' ', 'B', 'B', ' ', ' ', ' ', ' ', 'B'),
+                           (' ', ' ', 'B', ' ', ' ', ' ', ' ', 'B'),
+                           ('B', ' ', ' ', ' ', ' ', ' ', ' ', 'B'),
+                           ('B', ' ', ' ', ' ', ' ', ' ', ' ', 'B'),
+                           (' ', 'W', 'W', 'W', 'W', 'W', 'W', ' '))
+       
+        self.quadTable6 = QuadTable(self.board10, 8)
+
+       
     def tearDown(self):
         pass
 
@@ -74,15 +107,8 @@ class Test(unittest.TestCase):
         self.assertEqual('Q2', self.quadTable1.getQuadType(1, 2, 'W'))
         self.assertEqual('Q1', self.quadTable1.getQuadType(2, 2, 'W'))
         
-        count_types_w = {'Q0' : 0, 'Q1' : 0, 'Q2' : 0, 'Q3' : 0, 'Q4' : 0, 'Qd' : 0}
-        for x in range(-1, self.quadTable3.size):
-            for y in range(-1, self.quadTable3.size):
-                count_types_w[self.quadTable3.getQuadType(x, y, 'W')] += 1
-        
-        count_types_b = {'Q0' : 0, 'Q1' : 0, 'Q2' : 0, 'Q3' : 0, 'Q4' : 0, 'Qd' : 0}
-        for x in range(-1, self.quadTable3.size):
-            for y in range(-1, self.quadTable3.size):
-                count_types_b[self.quadTable3.getQuadType(x, y, 'B')] += 1
+        count_types_w = count_types(self.quadTable3, 'W')
+        count_types_b = count_types(self.quadTable3, 'B')
          
         self.assertEqual(count_types_w['Q0'], 53)
         self.assertEqual(count_types_w['Q1'], 8)
@@ -98,6 +124,22 @@ class Test(unittest.TestCase):
         self.assertEqual(count_types_b['Q4'], 0)
         self.assertEqual(count_types_b['Qd'], 0)
         
+        count_types_w2 = count_types(self.quadTable6, 'W')
+        count_types_b2 = count_types(self.quadTable6, 'B')
+         
+        self.assertEqual(count_types_w2['Q0'], 53)
+        self.assertEqual(count_types_w2['Q1'], 8)
+        self.assertEqual(count_types_w2['Q2'], 20)
+        self.assertEqual(count_types_w2['Q3'], 0)
+        self.assertEqual(count_types_w2['Q4'], 0)
+        self.assertEqual(count_types_w2['Qd'], 0)
+        
+        self.assertEqual(count_types_b2['Q0'], 49)
+        self.assertEqual(count_types_b2['Q1'], 17)
+        self.assertEqual(count_types_b2['Q2'], 14)
+        self.assertEqual(count_types_b2['Q3'], 1)
+        self.assertEqual(count_types_b2['Q4'], 0)
+        self.assertEqual(count_types_b2['Qd'], 0)
                     
     def testEulerNumber(self):
         self.assertEqual(3, self.quadTable2.eulerNumber('B'))
@@ -106,9 +148,22 @@ class Test(unittest.TestCase):
         
     def testCalcMoveDist(self):
         move1 = MoveAction(3, 3, Direction("W", (0, -1)))
-        self.assertEqual(3, self.quadTable2.calcMoveDist(move1))
+        self.assertEqual(3, calcMoveDist(move1, self.quadTable2.board, self.quadTable2.size))
         move2 = MoveAction(2, 4, Direction("SW", (1, -1)))   
-        self.assertEqual(4, self.quadTable2.calcMoveDist(move2))
+        self.assertEqual(4, calcMoveDist(move2, self.quadTable2.board, self.quadTable2.size))
+
+    
+    def testUpdate(self):
+        move1 = MoveAction(6, 0, Direction("E", (0, 1)))
+        self.assertEqual(3, self.quadTable2.calcMoveDist(move1))
+
+def count_types(quadTable, player):
+    count_types = {'Q0':0, 'Q1':0, 'Q2':0, 'Q3':0, 'Q4':0, 'Qd':0}
+    for x in range(-1, quadTable.size):
+        for y in range(-1, quadTable.size):
+            count_types[quadTable.getQuadType(x, y, player)] += 1
+    
+    return count_types
 
 
 if __name__ == "__main__":
