@@ -65,8 +65,8 @@ class QuadTable():
     
 
     def movePiece(self, action, player):
-        from_x = action.row
-        from_y = action.col
+        from_x = action.col
+        from_y = action.row
         
         dist = self.calcMoveDist(action, player)
         
@@ -85,25 +85,30 @@ class QuadTable():
             self.updateCellSurroundings(to_x, to_y, other_player(player))
 
 
-    def calcMoveDist(self, action, player):
+    def calcMoveDist(self, action):
+#        print '----'
         dist = 0
-        x = action.row
-        y = action.col
+        x = action.col
+        y = action.row
         while x >= 0 and y >= 0 and x < self.size and y < self.size:
-            x += action.direction.delta[0]
-            y += action.direction.delta[1]
-            if self.board[y][x] == player:
+#            print '(',x,',',y,') = ', self.board[y][x]
+            if self.board[y][x] != EMPTY:
                 dist += 1
+            x += action.direction.delta[1]
+            y += action.direction.delta[0]
         
-        x = action.row
-        y = action.col
+#        print '+++'
+
+        x = action.col
+        y = action.row
         while x >= 0 and y >= 0 and x < self.size and y < self.size:
-            if self.board[y][x] == player:
+#            print '(',x,',',y,') = ', self.board[y][x]
+            if self.board[y][x] != EMPTY:
                 dist += 1
-            x += -action.direction.delta[0]
-            y += -action.direction.delta[1]
+            x += -action.direction.delta[1]
+            y += -action.direction.delta[0]
         
-        return dist
+        return dist - 1
 
     def updateCellSurroundings(self, x, y, player):
         self.setQuadType(x, y, findQuadType(x, y, self.board, self.size, player), player)
