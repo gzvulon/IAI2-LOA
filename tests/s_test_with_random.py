@@ -8,13 +8,13 @@ from s_agents import  DummyAgent
 from loa_game import WHITE, BLACK, LinesOfActionState
 from game_runner import GameRunner
 from alpha_beta import INFINITY
-from s_agents_itest import AlphaBetaPrintAgent
+from s_agents_itest import AlphaBetaPrintAgent, SmartAlphaBetaPrintAgent
 
 
     
 agents = {}
-agents[WHITE] = AlphaBetaPrintAgent()
-agents[BLACK] = DummyAgent()
+agents[ WHITE ] = SmartAlphaBetaPrintAgent()
+agents[ BLACK ] = DummyAgent()
 
 state = LinesOfActionState(6, 50)
 
