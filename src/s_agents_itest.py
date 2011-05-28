@@ -5,7 +5,7 @@ Created on May 27, 2011
 @author: inesmeya
 """
 from game_agent import GameAgent
-from s_alpha_beta import AlphaBetaSearch
+from s_alpha_beta import AlphaBetaSearch, SmartAlphaBetaSearch
 from s_heuristics import winner_heuristics
 from s_eval_mass import CenterMassEvaluator
 
@@ -23,7 +23,8 @@ class AlphaBetaPrintAgent(GameAgent):
         r1,r2 = self.evaluator.evaluate2(game_state, self.player)
         r = r1 + r2
         print "r=", r, "    their:",r1, "    fix:",r2        
-        return self.alphaBeta.search(game_state)
+        action =  self.alphaBeta.search(game_state)
+        return action
     
     def setup(self, player, game_state, turn_time_limit, setup_time_limit):
         self.evaluator = CenterMassEvaluator()

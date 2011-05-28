@@ -14,7 +14,7 @@ from s_agents_itest import AlphaBetaPrintAgent
     
 agents = {}
 agents[WHITE] = AlphaBetaPrintAgent()
-agents[BLACK] = DummyAgent()
+agents[ BLACK ] = DummyAgent()
 
 state = LinesOfActionState(6, 50)
 
