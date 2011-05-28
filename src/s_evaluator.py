@@ -6,7 +6,7 @@ Created on May 26, 2011
 """
 
 class Evaluator():
-    def evaluate(self, state, player, action =None, quad_table_ext=None):
+    def evaluate(self, state, player, action =None, info_set=None):
         '''
         @param player: our player
         @param action: last action, from parent to this node
@@ -17,7 +17,6 @@ class Evaluator():
         @return: double between -1 and 1
         '''
         raise Exception("Not Implemented")
-
 
 
 class UpdatableTable():    
