@@ -4,13 +4,26 @@ Created on May 26, 2011
 
 @author: inesmeya
 """
-from s_evaluator import Evaluator
-from s_definitions import WHITE, BLACK, EMPTY
+from s_evaluator import Evaluator, UpdatableTable
+from loa_game import WHITE, BLACK, EMPTY
 import sys
 
-class CenterMassEvaluator(Evaluator):
+class CenterMassTable(UpdatableTable):
     
-    def state_to_coord_repr(self,state):
+    def update(self,state, action, new_state):
+        ''' state + action => new_state
+        @param action:  
+        '''
+    
+    def __init__(self,board):
+        # {WHITE : [(x,y),(x1,y1),...], BLACK : [(x,y),(x1,y1),...]}
+        self.coord_repr = self.state_to_coord_repr(board)
+        # central of mass dict {WHITE : (x,y) , BLACK : [(x,y),(x1,y1),...]}
+        self.cm_dict ={}
+        self.cm_dict[WHITE] = self.center_of_mass_from_coord_list[self.coord_repr[WHITE]]
+        self.cm_dict[BLACK] = self.center_of_mass_from_coord_list[self.coord_repr[BLACK]]
+
+    def state_to_coord_repr(self,board):
         ''' Converts board matrix to two lists with checkers coordinates
         @param state.board: (row1,row2,...,rowN)
                       rowX = (EMPTY,WHITE,BLACK,..,<CELL_N>)
@@ -21,7 +34,7 @@ class CenterMassEvaluator(Evaluator):
         '''
         res = {WHITE : [], BLACK : []}
         y = 0
-        for row in state.board:
+        for row in board:
             x = 0
             for cell in row:
                 if cell != EMPTY:
@@ -29,7 +42,6 @@ class CenterMassEvaluator(Evaluator):
                 x += 1
             y+=1
         return res
-        
     
     def center_of_mass_from_coord_list(self,coord_list):
         ''' calculate center of mass from coord_list
@@ -44,7 +56,12 @@ class CenterMassEvaluator(Evaluator):
             Y += y
         cx,cy = X/n,Y/n
         return (cx,cy)
-        
+    
+    def update(self,state, action, new_state):
+        old_p = (0,0)
+        new_p = (0,0)
+
+class CenterMassEvaluator(Evaluator):
     
     def distance(self,(x1,y1),(x2,y2)):
         h = abs(y1-y2)
@@ -121,13 +138,6 @@ class CenterMassEvaluator(Evaluator):
         r1, r2 = self.evaluate2(state, player, action, quad_table_ext)
         return r1 + r2
           
-        
-
-        
-        
-        
-        
-        
         # calculate center of mass
         
 

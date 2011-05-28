@@ -25,6 +25,8 @@ class UpdatableTable():
         @param action:  
         
         '''
+    # def __init__(self,state)
+    
         
     
     

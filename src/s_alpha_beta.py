@@ -1,5 +1,5 @@
 # A bloody large number.
-from s_heuristics import simple_heuristic, winner_heuristics
+from s_heuristics import winner_heuristics
 INFINITY = 1.0e400
 
 class AlphaBetaSearch:
@@ -87,8 +87,6 @@ SIMPLE_WINNER = False
 #----------------------
 
 #
-
-
 class SmartAlphaBetaSearch:
     '''
     This search algorithm implements the limited-resource minimax tree search 
@@ -207,8 +205,6 @@ class SmartAlphaBetaSearch:
         for k,v in info_dict:
             new_info_dict[k] = v.update(state, action, successor_state)
         return new_info_dict
-    
-    
     
     # =========================  OPTIONS ===============================
     # ------------------------  check winner options --------------------

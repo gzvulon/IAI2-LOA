@@ -1,4 +1,4 @@
-from s_definitions import EMPTY, WHITE, BLACK
+from loa_games import EMPTY, WHITE, BLACK
 from bundlebuilder import copy
 from loa_game import MoveAction
 from s_common_ops import findQuadType, other_player, findDest

@@ -1,4 +1,4 @@
-from s_definitions import EMPTY
+from loa_game import EMPTY
 
 def winner_heuristics(state,player):
         winner = state.getWinner()
