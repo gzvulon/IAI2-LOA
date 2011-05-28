@@ -1,11 +1,4 @@
-# -*- coding:utf-8 -*-
-"""
-Created on May 26, 2011
-
-@author: inesmeya
-"""
-
-from loa_game import WHITE, BLACK, EMPTY
+from s_definitions import EMPTY
 
 def winner_heuristics(state,player):
         winner = state.getWinner()
@@ -27,15 +20,6 @@ def make_simple_heuristic(player):
         return winner_heuristics(player,state)
 
     return the_heuristic    
-
-# -*- coding:utf-8 -*-
-"""
-Created on May 26, 2011
-
-@author: inesmeya
-"""
-
-from loa_game import WHITE, BLACK, EMPTY
 
 def simple_heuristic(player):
     '''

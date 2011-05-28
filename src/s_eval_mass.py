@@ -5,7 +5,7 @@ Created on May 26, 2011
 @author: inesmeya
 """
 from s_evaluator import Evaluator
-from loa_game import LinesOfActionState, WHITE, BLACK, EMPTY
+from loa_game import WHITE, BLACK, EMPTY
 import sys
 
 class CenterMassEvaluator(Evaluator):
