@@ -1,5 +1,8 @@
 # A bloody large number.
 from s_heuristics import winner_heuristics
+from random import Random
+import time
+from s_common_ops import checkTime, TimeOutException
 INFINITY = 1.0e400
 
 class AlphaBetaSearch:
@@ -107,6 +110,7 @@ class SmartAlphaBetaSearch:
         self.max_depth = max_depth
         self.utility = utility
         self.quad_table = None
+        #self.info_
         
         self.f_checkWinner = { 
             SIMPLE_WINNER: self._checkWinnerSimple,
@@ -114,16 +118,21 @@ class SmartAlphaBetaSearch:
         }[winner_check]
 
     
-    def search(self, current_state, max_depth):
+    def search(self, current_state, max_depth, end_time):
         '''
         Search game to determine best action; use alpha-beta pruning.
         
         @param current_state: The current game state to start the search from.
         '''
+        # on each search this is renewd!
+        self.end_time = end_time
+        #
         best_value = -INFINITY
         successors = current_state.getSuccessors()
         
         for action, state in successors.items():
+            checkTime(self.end_time)
+            
             state_info = {} #todo initiate state info
             value = self._minValue(state, best_value, INFINITY, 1,max_depth, state_info)
             
@@ -138,8 +147,9 @@ class SmartAlphaBetaSearch:
         ''' checks if node terminal or reached depth limit =X
         @return: True, value if X  if node terminal or reached depth limit,
                        value - node value
-                 False,0 - otherwise
+                 False,0 - continue searching
         '''
+        checkTime(self.end_time)
         # check if node is terminate
         w = self.f_checkWinner(state)
         # if it is : return its value (-1 for enemy, +1 for us)
@@ -160,11 +170,13 @@ class SmartAlphaBetaSearch:
         # -- on regular node : use improved alpha beta --
         
         value = -INFINITY
+        checkTime(self.end_time)
         successors = state.getSuccessors()
         # -- reordering --
         #ordered_successors = self.f_oreder(successors,depth,max_depth)
         
         for action, successor_state in successors.items():
+            checkTime(self.end_time)
             # update iterative info for son node
             new_info_set = self._update_info_set(info_set, state, action, successor_state)
             # calculate minimum for son
@@ -177,16 +189,18 @@ class SmartAlphaBetaSearch:
         return value
     
     def _minValue(self, state, alpha, beta, depth,max_depth,info_set):
-        
         need_return, v = self._need_return(state, depth, max_depth,info_set)
         if need_return: return v
         
         value = INFINITY
+        
+        checkTime(self.end_time)
         successors = state.getSuccessors()
         # -- reordering --
         #ordered_successors = self.f_oreder(successors,depth,max_depth)
         
         for action, successor_state in successors.items():
+            checkTime(self.end_time)
             # update iterative info for son node
             new_info_set = self._update_info_set(info_set, state, action, successor_state)
             max_value = self._maxValue(successor_state, alpha, beta, depth + 1,max_depth,new_info_set)
@@ -228,3 +242,40 @@ class SmartAlphaBetaSearch:
 
     def _updateNothig(self,state, action, new_state):
         pass
+
+
+class AnyTimeSmartAlphaBeta():
+    def __init__(self, player, init_max_depth, utility, winner_check=SIMPLE_WINNER):
+        self.player = player
+        self.init_max_depth = init_max_depth
+        self.utility = utility
+        self.winner_check=winner_check
+        self.rand = Random(0)
+        
+        
+    def search(self, current_state, max_depth, time_limit):
+        #init timer
+        safe_delta = 0.3
+        start_time = time.clock()
+        end_time   = start_time + time_limit - safe_delta
+        
+        # choose default move randomly: 
+        succesors = current_state.getSuccessors()
+        index = self.rand.randint(0, len(succesors)-1)
+        res_action = succesors.keys()[index] 
+        
+        #start iterative search
+        curr_max_depth = self.init_max_depth
+#       print "time left", end_time - time.clock(), "d=", curr_max_depth
+        try:
+            while time.clock() < end_time:
+                print "time left", end_time - time.clock(), "d=", curr_max_depth
+                alg = SmartAlphaBetaSearch(self.player, curr_max_depth, self.utility, self.winner_check)
+                res_action = alg.search(current_state, max_depth, end_time)
+                curr_max_depth +=2 #TODO: TODO
+        except TimeOutException: #TODO for release handle all exceptios
+            pass
+        
+        return res_action     
+        
+        

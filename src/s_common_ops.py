@@ -1,4 +1,5 @@
 from loa_game import WHITE, BLACK, EMPTY
+import time
 
 def findDest(action):
     dist = calcMoveDist(action)
@@ -70,3 +71,16 @@ def other_player(player):
         return WHITE
     else:
         return EMPTY
+    
+    
+    
+# --------------  Time -------------------------------
+class TimeOutException(Exception):
+    pass
+
+def checkTime(end_time, safe_delta=0):
+    '''raises exception on timeout type: TimeOutException'''
+    if(end_time - safe_delta < time.clock()):
+        raise TimeOutException()
+    
+    

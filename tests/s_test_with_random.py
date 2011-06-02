@@ -8,15 +8,16 @@ from s_agents import  DummyAgent
 from loa_game import WHITE, BLACK, LinesOfActionState
 from game_runner import GameRunner
 from alpha_beta import INFINITY
-from s_agents_itest import AlphaBetaPrintAgent, SmartAlphaBetaPrintAgent
+from s_agents_itest import AlphaBetaPrintAgent, SmartAlphaBetaPrintAgent,\
+    AnytimeSmartAlphaBetaPrintAgent
 
 
     
 agents = {}
-agents[ WHITE ] = SmartAlphaBetaPrintAgent()
+agents[ WHITE ] = AnytimeSmartAlphaBetaPrintAgent()
 agents[ BLACK ] = DummyAgent()
 
 state = LinesOfActionState(6, 50)
 
-winner = GameRunner(state, agents, INFINITY, 1).run()
+winner = GameRunner(state, agents, 1.0 , 1).run()
 print 'Winner:', winner    
