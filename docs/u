@@ -1,0 +1,196 @@
+  0 1 2 3 4 5 
+0   W W W W   
+1 B         B 
+2 B         B 
+3 B         B 
+4 B         B 
+5   W W W W   
+
+The heuristics of gaim state
+  0 1 2 3 4 5 
+0   W W W W   
+1 B         B 
+2 B         B 
+3 B         B 
+4 B         B 
+5   W W W W   
+
+r= 0.458333333333     their: 0.333333333333     fix: 0.125
+50 W: (5, 4) NW
+  0 1 2 3 4 5 
+0   W W W W   
+1 B         B 
+2 B         B 
+3 B   W     B 
+4 B         B 
+5   W W W     
+
+49 B: (2, 0) NE
+  0 1 2 3 4 5 
+0   W B W W   
+1 B         B 
+2           B 
+3 B   W     B 
+4 B         B 
+5   W W W     
+
+The heuristics of gaim state
+  0 1 2 3 4 5 
+0   W B W W   
+1 B         B 
+2           B 
+3 B   W     B 
+4 B         B 
+5   W W W     
+
+r= 0.471428571429     their: 0.4     fix: 0.0714285714286
+48 W: (5, 1) NE
+  0 1 2 3 4 5 
+0   W B W W   
+1 B         B 
+2           B 
+3 B   W W   B 
+4 B         B 
+5     W W     
+
+47 B: (4, 0) E
+  0 1 2 3 4 5 
+0   W B W W   
+1 B         B 
+2           B 
+3 B   W W   B 
+4     B     B 
+5     W W     
+
+The heuristics of gaim state
+  0 1 2 3 4 5 
+0   W B W W   
+1 B         B 
+2           B 
+3 B   W W   B 
+4     B     B 
+5     W W     
+
+r= 0.559523809524     their: 0.416666666667     fix: 0.142857142857
+46 W: (0, 3) spin
+  0 1 2 3 4 5 
+0   W B   W   
+1 B       W B 
+2           B 
+3 B   W W   B 
+4     B     B 
+5     W W     
+
+45 B: (3, 0) SE
+  0 1 2 3 4 5 
+0   W B   W   
+1 B       W B 
+2           B 
+3     W W   B 
+4     B     B 
+5     B W     
+
+The heuristics of gaim state
+  0 1 2 3 4 5 
+0   W B   W   
+1 B       W B 
+2           B 
+3     W W   B 
+4     B     B 
+5     B W     
+
+r= 0.611111111111     their: 0.444444444444     fix: 0.166666666667
+44 W: (5, 3) NE
+  0 1 2 3 4 5 
+0   W B   W   
+1 B       W B 
+2           B 
+3     W W   W 
+4     B     B 
+5     B       
+
+43 B: (2, 5) W
+  0 1 2 3 4 5 
+0   W B   W   
+1 B       W B 
+2         B   
+3     W W   W 
+4     B     B 
+5     B       
+
+The heuristics of gaim state
+  0 1 2 3 4 5 
+0   W B   W   
+1 B       W B 
+2         B   
+3     W W   W 
+4     B     B 
+5     B       
+
+r= 0.666666666667     their: 0.5     fix: 0.166666666667
+42 W: (1, 3) spin
+  0 1 2 3 4 5 
+0   W B   W   
+1 B         B 
+2       B W   
+3     W W   W 
+4     B     B 
+5     B       
+
+41 B: (1, 3) spin
+  0 1 2 3 4 5 
+0   W B   W   
+1 B     B   B 
+2       W     
+3     W W   W 
+4     B     B 
+5     B       
+
+The heuristics of gaim state
+  0 1 2 3 4 5 
+0   W B   W   
+1 B     B   B 
+2       W     
+3     W W   W 
+4     B     B 
+5     B       
+
+r= 0.666666666667     their: 0.5     fix: 0.166666666667
+40 W: (0, 1) SE
+  0 1 2 3 4 5 
+0     B   W   
+1 B     B   B 
+2       W     
+3     W W W W 
+4     B     B 
+5     B       
+
+39 B: (1, 3) spin
+  0 1 2 3 4 5 
+0     B   W   
+1 B     W B B 
+2             
+3     W W W W 
+4     B     B 
+5     B       
+
+The heuristics of gaim state
+  0 1 2 3 4 5 
+0     B   W   
+1 B     W B B 
+2             
+3     W W W W 
+4     B     B 
+5     B       
+
+r= 0.833333333333     their: 0.5     fix: 0.333333333333
+38 W: (0, 4) SW
+  0 1 2 3 4 5 
+0     B       
+1 B     W B B 
+2     W       
+3     W W W W 
+4     B     B 
+5     B       
+
+Winner: W
