@@ -3,6 +3,8 @@ from s_heuristics import winner_heuristics
 from random import Random
 import time
 from s_common_ops import checkTime, TimeOutException
+from s_turn_cache import TurnCache
+
 INFINITY = 1.0e400
 
 class AlphaBetaSearch:
@@ -245,6 +247,7 @@ class SmartAlphaBetaSearch:
 
 
 class AnyTimeSmartAlphaBeta():
+    '''The Main Shit'''
     def __init__(self, player, init_max_depth, utility, winner_check=SIMPLE_WINNER):
         self.player = player
         self.init_max_depth = init_max_depth
@@ -258,9 +261,17 @@ class AnyTimeSmartAlphaBeta():
         safe_delta = 0.3
         start_time = time.clock()
         end_time   = start_time + time_limit - safe_delta
+        turn_cache = TurnCache()
+        
+        #turn_info
+        
+        succesors = turn_cache.get_cached_value(current_state,current_state.getSuccessors)
         
         # choose default move randomly: 
         succesors = current_state.getSuccessors()
+        
+        turn_cache.addState(current_state, )
+        
         index = self.rand.randint(0, len(succesors)-1)
         res_action = succesors.keys()[index] 
         
