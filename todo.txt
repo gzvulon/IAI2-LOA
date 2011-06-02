@@ -21,5 +21,9 @@
 		3.4 Calculate QuadValueTableExt (state info, number of connected states, iteratice information using action)
 	
 	
-	
-	 
+-------------------------------
+
+1. Time support
+2. Any times
+3. State Chaching
+4. Reordering

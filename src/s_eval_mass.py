@@ -13,8 +13,10 @@ def initialize(board):
         coord_repr = state_to_coord_repr(board)
         # central of mass dict {WHITE : (x,y) , BLACK : [(x,y),(x1,y1),...]}
         cm_dict ={}
-        cm_dict[WHITE] = center_of_mass_from_coord_list[coord_repr[WHITE]]
-        cm_dict[BLACK] = center_of_mass_from_coord_list[coord_repr[BLACK]]
+        cm_dict[WHITE] = center_of_mass_from_coord_list(coord_repr[WHITE])
+        cm_dict[BLACK] = center_of_mass_from_coord_list(coord_repr[BLACK])
+        res = CenterMassTable(coord_repr,cm_dict)
+        return res
 
 def state_to_coord_repr(board):
     ''' Converts board matrix to two lists with checkers coordinates
@@ -56,15 +58,12 @@ class CenterMassTable(UpdatableTable):
         ''' state + action => new_state
         @param action:  
         '''
+        raise NotImplementedError()
     
     def __init__(self,coord_repr,cm_dict):
         self.coord_repr = coord_repr
         self.cm_dict = cm_dict
-
-    
-    def update(self,state, action, new_state):
-        old_p = (0,0)
-        new_p = (0,0)
+        
 
 class CenterMassEvaluator(Evaluator):
     
@@ -126,10 +125,13 @@ class CenterMassEvaluator(Evaluator):
         '''
         @type state: loa_game.LinesOfActionState
         '''
-        coord_repr = self.state_to_coord_repr(state)
         
-        my_coord_list = coord_repr[player]
-        cm = self.center_of_mass_from_coord_list(my_coord_list)
+        cmt = initialize(state.board)
+        cmt.coord_repr
+        
+        my_coord_list = cmt.coord_repr[player]
+        cm = cmt.cm_dict[player]
+
         rsmd = self.sum_of_min_distances_ext2(cm,my_coord_list)
         smart_sum, smart_sum_count, dsum, dmin_sum, dmin, dmin_count = rsmd
         r1 = self.min_sum_res(smart_sum_count, smart_sum)
