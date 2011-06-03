@@ -1,91 +1,13 @@
-# A bloody large number.
 from s_heuristics import winner_heuristics
 from random import Random
 import time
-from s_common_ops import checkTime, TimeOutException
+from s_end_timer import checkTime, TimeOutException
 from s_turn_cache import TurnCache, NoneTurnCache
 from loa_game import LinesOfActionState
+from s_end_timer import EndTimer
 
+# A bloody large number.
 INFINITY = 1.0e400
-
-class AlphaBetaSearch:
-    '''
-    This search algorithm implements the limited-resource minimax tree search 
-    algorithm with alpha-beta pruning for zero-sum games. This version cuts off 
-    search by depth alone and uses an evaluation function (utility).
-    '''
-    
-    def __init__(self, player, max_depth, utility):
-        '''
-        Constructor.
-        
-        @param player: Your player. This search algorithm will choose the best
-                       actions for this player.
-        @param max_depth: The depth of the search tree.
-        @param utility: An evaluation function for states.
-        '''
-        self.player = player
-        self.max_depth = max_depth
-        self.utility = utility
-    
-    def search(self, current_state):
-        '''
-        Search game to determine best action; use alpha-beta pruning.
-        
-        @param current_state: The current game state to start the search from.
-        '''
-        best_value = -INFINITY
-        
-        for action, state in current_state.getSuccessors().items():
-            # TODO: here we have an action, hence we can pass it to heuristic fn
-            value_fn = self._getValueFn(state)
-            value = value_fn(state, best_value, INFINITY, 1)
-            
-            if value > best_value:
-                best_value = value
-                best_action = action
-        
-        return best_action
-    
-    def _getValueFn(self, state):
-        if state.getCurrentPlayer() == self.player:
-            return self._maxValue
-        else:
-            return self._minValue
-    
-    def _cutoffTest(self, state, depth):
-        return depth >= self.max_depth or (state.getWinner() is not None)
-    
-    def _maxValue(self, state, alpha, beta, depth):
-        if self._cutoffTest(state, depth):
-            return self.utility(state)
-        
-        value = -INFINITY
-        successors = state.getSuccessors()
-        ordered_successors = successors #f_reorder_max(state,successors)
-        for successor in ordered_successors.values():
-            value_fn = self._getValueFn(successor)
-            value = max(value, value_fn(successor, alpha, beta, depth + 1))
-            if value >= beta: # cut
-                return value 
-            alpha = max(alpha, value)
-        
-        return value
-    
-    def _minValue(self, state, alpha, beta, depth):
-        if self._cutoffTest(state, depth):
-            return self.utility(state)
-        
-        value = INFINITY
-        for successor in state.getSuccessors().values():
-            
-            value_fn = self._getValueFn(successor)
-            value = min(value, value_fn(successor, alpha, beta, depth + 1))
-            if value <= alpha: # cut
-                return value
-            beta = min(beta, value)
-        
-        return value
 
 # winner_check options
 QUAD_WINNER = True
@@ -129,7 +51,7 @@ class SmartAlphaBetaSearch:
         @param current_state: The current game state to start the search from.
         @return: best_action, best_state
         '''
-        # on each search this is renewd!
+        # on each search this is renewed!
         self.end_time = end_time
         #
         best_value = -INFINITY
@@ -167,7 +89,8 @@ class SmartAlphaBetaSearch:
         
         # if reached depth limit: evaluate node using heuristics
         if depth >= max_depth:
-            return True, self.utility(state, info_set) # new_info_set        
+            u_res = self.turn_cache.get(state, self.utility, self.end_time)
+            return True, u_res# self.utility(state) # new_info_set        
         
         return False,0
     
@@ -180,7 +103,8 @@ class SmartAlphaBetaSearch:
         
         value = -INFINITY
         checkTime(self.end_time)
-        successors = state.getSuccessors()
+        #successors = state.getSuccessors()
+        successors = self.turn_cache.get(state, LinesOfActionState.getSuccessors)
         # -- reordering --
         #ordered_successors = self.f_oreder(successors,depth,max_depth)
         
@@ -204,7 +128,9 @@ class SmartAlphaBetaSearch:
         value = INFINITY
         
         checkTime(self.end_time)
-        successors = state.getSuccessors()
+        #successors = state.getSuccessors()
+        successors = self.turn_cache.get(state, LinesOfActionState.getSuccessors)
+        
         # -- reordering --
         #ordered_successors = self.f_oreder(successors,depth,max_depth)
         
@@ -265,12 +191,15 @@ class SmartAlphaBetaSearch:
 
 class AnyTimeSmartAlphaBeta():
     '''The Main Shit'''
-    def __init__(self, player, init_max_depth, utility, winner_check=SIMPLE_WINNER, caching =False):
+    def __init__(self, player, init_max_depth, 
+                 utility, winner_check=SIMPLE_WINNER, 
+                 depth_delta=1, caching =False):
         self.player = player
         self.init_max_depth = init_max_depth
         self.utility = utility
         self.winner_check=winner_check
         self.rand = Random(0)
+        self.depth_delta = depth_delta
         
         if caching: self.turn_cache = TurnCache()
         else:       self.turn_cache = NoneTurnCache()
@@ -281,6 +210,7 @@ class AnyTimeSmartAlphaBeta():
         safe_delta = 0.3
         start_time = time.clock()
         end_time   = start_time + time_limit - safe_delta
+        EndTimer.set(end_time)
         
         #turn_info
         
@@ -294,13 +224,12 @@ class AnyTimeSmartAlphaBeta():
         curr_max_depth = self.init_max_depth
 #       print "time left", end_time - time.clock(), "d=", curr_max_depth
         
-        
         try:
             while time.clock() < end_time:
-                print "time left", end_time - time.clock(), "d=", curr_max_depth
+                print  "time left", end_time - time.clock(), "d=", curr_max_depth
                 alg = SmartAlphaBetaSearch(self.player, self.utility, self.turn_cache, self.winner_check)
                 res_action,res_state = alg.search(current_state, curr_max_depth, end_time)
-                curr_max_depth +=2 #TODO: TODO
+                curr_max_depth +=self.depth_delta #TODO: TODO
         except TimeOutException: #TODO for release handle all exceptios
             pass
         

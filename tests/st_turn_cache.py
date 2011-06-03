@@ -71,8 +71,24 @@ class Test(unittest.TestCase):
         o.clean_up_if_need(current_state, ns)
         self.assertEquals(o.checkers_left_table.keys(),[ (8, 7)])
             
+    def test__get_winner(self):
+        state = LinesOfActionState(6, 50)
+        o = TurnCache()
+        o.get(state, LinesOfActionState.getWinner)
+        o.get(state, LinesOfActionState.getWinner)
+        self.assertEqual(o.statistics.hit_rate(), 
+        {'states': (0.5, 1, 1), 'getWinner': (0.5, 1, 1), 'total': 0.5})
         
-
+    def test__get_multiple_params(self):
+        state = LinesOfActionState(6, 50)
+        o = TurnCache()
+        
+        def fun(istate, p):
+            print self.assertEqual(p, 23)
+        
+        o.get(state, fun, 23)
+            
+       
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.test_get_or_set_init']
     unittest.main()

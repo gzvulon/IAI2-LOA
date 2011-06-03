@@ -9,9 +9,12 @@ from loa_game import WHITE
 def get_or_set_init(the_dict,key, lazy_init_value, verbose=False):
     ''' 
     '''
-    value = the_dict.get(key, None)
+    class MyNone():
+        pass
+    
+    value = the_dict.get(key, MyNone)
     isNew = False
-    if not value : 
+    if value == MyNone: 
         value = lazy_init_value()
         the_dict[key] = value
         isNew  = True
@@ -29,18 +32,22 @@ class Statistics():
         x = get_or_set_init(self.stats, name,lambda: [0,0])
         x[isNew] += 1
     
+    def calc_hit_rate(self,a,b):
+        r = float(a) / (a + b)
+        return r
+    
     def hit_rate(self):
         res = {}
         total_trues, total_falses = 0,0
         for name, (falses,trues) in self.stats.items():
-            res[name] = float(trues) / (trues + falses)
+            res[name] = self.calc_hit_rate(falses,trues), trues, falses
             total_trues += trues
             total_falses += falses
         
         if total_trues + total_falses == 0:
             res['total'] = 'empty statistics'
         else:
-            res['total'] = float(total_trues) / (total_trues + total_falses)
+            res['total'] = self.calc_hit_rate(total_falses,total_trues)
         return res
     
             
@@ -49,18 +56,21 @@ class TurnCache():
         self.checkers_left_table = {}
         self.statistics = Statistics()
         
-    def get(self,current_state, func):
-        return self.get_cached_value(current_state, func)
+    def get(self,current_state, func, *agrs):
+        return self.get_cached_value(current_state, func, *agrs)
     
-    def get_cached_value(self, current_state, func):
+    def get_cached_value(self, current_state, func, *agrs):
         '''
         @param current_state: state of LinesOfActionState
         @param func: LinesOfActionState -> value
         '''
         turn_info = self._get_turn_info(current_state)
-        func_value, isNew = get_or_set_init(  turn_info,func, lambda: func(current_state),True)
-        self.statistics.add(isNew, func.__name__)
-        return func_value
+        func_value, isNew = get_or_set_init(  turn_info, func.__name__, 
+                                              lambda: func(current_state,*agrs),
+                                              verbose=True)
+        
+        self.statistics.add(isNew, func.__name__)        
+        return func_value 
 
 
     def clean_up_if_need(self, game_state, next_state):
@@ -91,22 +101,25 @@ class TurnCache():
     def _get_turn_info(self,current_state):
         checkers_left = (current_state.whites, current_state.blacks)
         turn_info_table = get_or_set_init(self.checkers_left_table,checkers_left, lambda: {} )
-        turn_info = get_or_set_init(turn_info_table, current_state, lambda: {}  )
+        turn_info,isNew = get_or_set_init(turn_info_table, current_state, lambda: {},verbose=True  )
+        self.statistics.add(isNew, 'states')
         return turn_info
     
 class NoneTurnCache():
     ''' Dummy cache'''
     
+    def __init__(self):
+        self.statistics = Statistics()
     
-    def get(self,current_state, func):
-        return self.get_cached_value(current_state, func)    
+    def get(self,current_state, func,*agrs):
+        return self.get_cached_value(current_state, func,*agrs)    
     
-    def get_cached_value(self, current_state, func):
+    def get_cached_value(self, current_state, func,*agrs):
         '''
         @param current_state: state of LinesOfActionState
         @param func: LinesOfActionState -> value
         '''
-        return func(current_state)
+        return func(current_state,*agrs)
     
     def clean_up_if_need(self, game_state, next_state):
         '''Removes all states that can't be reached 

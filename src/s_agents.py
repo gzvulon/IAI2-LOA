@@ -5,19 +5,9 @@ Created on May 26, 2011
 @author: szvulon
 """
 from game_agent import GameAgent
-from s_alpha_beta import AlphaBetaSearch
 from loa_game import SpinAction, Direction, DIRECTIONS, MoveAction
 from s_heuristics import make_simple_heuristic
 from random import Random
-
-class AlphaBetaAgent(GameAgent):
-    def move(self, game_state):
-        return self.alphaBeta.search(game_state)
-    
-    def setup(self, player, game_state, turn_time_limit, setup_time_limit):
-        self.player = player
-        h = make_simple_heuristic(player)
-        self.alphaBeta = AlphaBetaSearch(self.player, 3, h)
         
 class InteractiveAgent(GameAgent):
     class StopGameException(Exception):
@@ -67,7 +57,7 @@ class DummyAgent(GameAgent):
     
 class RandomAgent(GameAgent):
     def __init__(self):
-        self.rand = Random(0)
+        self.rand = Random()
          
     def move(self, game_state):
         succs = game_state.getSuccessors().keys()

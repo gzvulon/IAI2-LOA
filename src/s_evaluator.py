@@ -6,7 +6,7 @@ Created on May 26, 2011
 """
 
 class Evaluator():
-    def evaluate(self, state, player, action =None, info_set=None):
+    def evaluate(self, state, player, end_time,action =None, info_set=None):
         '''
         @param player: our player
         @param action: last action, from parent to this node

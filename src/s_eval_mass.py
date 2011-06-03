@@ -7,13 +7,19 @@ Created on May 26, 2011
 from s_evaluator import Evaluator, UpdatableTable
 from loa_game import WHITE, BLACK, EMPTY
 import sys
+from s_end_timer import EndTimer
+
+g_end_time = None
 
 def initialize(board):
         # {WHITE : [(x,y),(x1,y1),...], BLACK : [(x,y),(x1,y1),...]}
+        EndTimer.check()
         coord_repr = state_to_coord_repr(board)
         # central of mass dict {WHITE : (x,y) , BLACK : [(x,y),(x1,y1),...]}
         cm_dict ={}
+        EndTimer.check()
         cm_dict[WHITE] = center_of_mass_from_coord_list(coord_repr[WHITE])
+        EndTimer.check()
         cm_dict[BLACK] = center_of_mass_from_coord_list(coord_repr[BLACK])
         res = CenterMassTable(coord_repr,cm_dict)
         return res
@@ -121,31 +127,38 @@ class CenterMassEvaluator(Evaluator):
             res = 1.0 / average
         return res
     
-    def evaluate2(self, state, player, action =None, quad_table_ext=None):
+    def evaluate2(self, state, player, end_time, action =None, quad_table_ext=None):
         '''
         @type state: loa_game.LinesOfActionState
         '''
         
         cmt = initialize(state.board)
         cmt.coord_repr
+        EndTimer.check()
         
         my_coord_list = cmt.coord_repr[player]
         cm = cmt.cm_dict[player]
-
+        EndTimer.check()
+        
         rsmd = self.sum_of_min_distances_ext2(cm,my_coord_list)
         smart_sum, smart_sum_count, dsum, dmin_sum, dmin, dmin_count = rsmd
+        
         r1 = self.min_sum_res(smart_sum_count, smart_sum)
+        EndTimer.check()
+        
         r2 = self.min_sum_fix(dmin, dmin_count, len(my_coord_list))
+        EndTimer.check()
+        
         return r1, r2
         
-    def evaluate(self, state, player, action =None, quad_table_ext=None):
+    def evaluate(self, state, player, end_time, action =None, quad_table_ext=None):
         '''
         @type state: loa_game.LinesOfActionState
         '''
-        r1, r2 = self.evaluate2(state, player, action, quad_table_ext)
+        r1, r2 = self.evaluate2(state, player, end_time, action, quad_table_ext)
         return r1 + r2
           
         # calculate center of mass
-        
+        #TODO: no end_time
 
     

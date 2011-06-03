@@ -72,15 +72,6 @@ def other_player(player):
     else:
         return EMPTY
     
-    
-    
 # --------------  Time -------------------------------
-class TimeOutException(Exception):
-    pass
 
-def checkTime(end_time, safe_delta=0):
-    '''raises exception on timeout type: TimeOutException'''
-    if(end_time - safe_delta < time.clock()):
-        raise TimeOutException()
-    
 #------------------------------------------------------    
