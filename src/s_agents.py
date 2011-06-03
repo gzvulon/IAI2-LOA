@@ -8,6 +8,7 @@ from game_agent import GameAgent
 from s_alpha_beta import AlphaBetaSearch
 from loa_game import SpinAction, Direction, DIRECTIONS, MoveAction
 from s_heuristics import make_simple_heuristic
+from random import Random
 
 class AlphaBetaAgent(GameAgent):
     def move(self, game_state):
@@ -64,7 +65,20 @@ class DummyAgent(GameAgent):
     def setup(self, player, game_state, turn_time_limit, setup_time_limit):
         return
     
-
+class RandomAgent(GameAgent):
+    def __init__(self):
+        self.rand = Random(0)
+         
+    def move(self, game_state):
+        succs = game_state.getSuccessors().keys()
+        index = self.rand.randint(0, len(succs)-1)
+        action = succs[index]
+        return action
+    
+    def setup(self, player, game_state, turn_time_limit, setup_time_limit):
+        return
+    
+    
 class SmartAlphaBetaAgent(GameAgent):
     def move(self, game_state):
         return self.alphaBeta.search(game_state)

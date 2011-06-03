@@ -4,7 +4,7 @@ Created on May 27, 2011
 
 @author: inesmeya
 """
-from s_agents import  DummyAgent
+from s_agents import  DummyAgent, RandomAgent
 from loa_game import WHITE, BLACK, LinesOfActionState
 from game_runner import GameRunner
 from alpha_beta import INFINITY
@@ -15,7 +15,7 @@ from s_agents_itest import AlphaBetaPrintAgent, SmartAlphaBetaPrintAgent,\
     
 agents = {}
 agents[ WHITE ] = AnytimeSmartAlphaBetaPrintAgent()
-agents[ BLACK ] = DummyAgent()
+agents[ BLACK ] = RandomAgent()
 
 state = LinesOfActionState(6, 50)
 
