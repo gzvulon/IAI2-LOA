@@ -6,19 +6,48 @@ Created on Jun 2, 2011
 """
 from loa_game import WHITE
 
-def get_or_set_init(the_dict,key, lazy_init_value):
-    '''
+def get_or_set_init(the_dict,key, lazy_init_value, verbose=False):
+    ''' 
     '''
     value = the_dict.get(key, None)
+    isNew = False
     if not value : 
         value = lazy_init_value()
         the_dict[key] = value
+        isNew  = True
+    
+    if verbose:
+        return value, isNew
     return value
+
+class Statistics():
+    
+    def __init__(self):
+        self.stats= {}
+    
+    def add(self,isNew, name):
+        x = get_or_set_init(self.stats, name,lambda: [0,0])
+        x[isNew] += 1
+    
+    def hit_rate(self):
+        res = {}
+        total_trues, total_falses = 0,0
+        for name, (falses,trues) in self.stats.items():
+            res[name] = float(trues) / (trues + falses)
+            total_trues += trues
+            total_falses += falses
         
+        if total_trues + total_falses == 0:
+            res['total'] = 'empty statistics'
+        else:
+            res['total'] = float(total_trues) / (total_trues + total_falses)
+        return res
+    
             
 class TurnCache():
     def __init__(self):
         self.checkers_left_table = {}
+        self.statistics = Statistics()
         
     def get(self,current_state, func):
         return self.get_cached_value(current_state, func)
@@ -29,9 +58,11 @@ class TurnCache():
         @param func: LinesOfActionState -> value
         '''
         turn_info = self._get_turn_info(current_state)
-        func_value = get_or_set_init(  turn_info,func, lambda: func(current_state))
+        func_value, isNew = get_or_set_init(  turn_info,func, lambda: func(current_state),True)
+        self.statistics.add(isNew, func.__name__)
         return func_value
-    
+
+
     def clean_up_if_need(self, game_state, next_state):
         '''Removes all states that can't be reached 
            after capture of checker
