@@ -61,6 +61,7 @@ class SmartAlphaBetaSearch:
         #successors = current_state.getSuccessors()
         successors = self.turn_cache.get(current_state, LinesOfActionState.getSuccessors)
         
+        EndTimer.check(name="a1")
         
         for action, state in successors.items():
             EndTimer.check(name="b")
@@ -105,14 +106,18 @@ class SmartAlphaBetaSearch:
         # -- on regular node : use improved alpha beta --
         
         value = -INFINITY
-        checkTime(self.end_time)
+        EndTimer.check(name="d1")
         #successors = state.getSuccessors()
         successors = self.turn_cache.get(state, LinesOfActionState.getSuccessors)
         # -- reordering --
         #ordered_successors = self.f_oreder(successors,depth,max_depth)
-        
+        EndTimer.check(name="d2")
+       
+        GTimeStatistics.start_measure("_maxValue.successors.items() d:"    + str(depth))        
         for action, successor_state in successors.items():
-            EndTimer.check(name="d")
+            GTimeStatistics.stop_measure("_maxValue.successors.items() d:"    + str(depth))
+            EndTimer.check(name="d3")
+           
             # update iterative info for son node
             new_info_set = self._update_info_set(info_set, state, action, successor_state)
             # calculate minimum for son
@@ -137,9 +142,9 @@ class SmartAlphaBetaSearch:
         
         # -- reordering --
         #ordered_successors = self.f_oreder(successors,depth,max_depth)
-        GTimeStatistics.start_measure("successors.items()")
+        GTimeStatistics.start_measure("_minValue.successors.items() d:"    + str(depth))
         for action, successor_state in successors.items():
-            GTimeStatistics.stop_measure("successors.items()")
+            GTimeStatistics.stop_measure("_minValue.successors.items() d:" + str(depth))
             EndTimer.check(name="g")
             # update iterative info for son node
             new_info_set = self._update_info_set(info_set, state, action, successor_state)
