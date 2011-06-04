@@ -67,8 +67,9 @@ class QuadTable():
 
     def update(self, state, action, newstate):
         # Created a new quad table to be updated and returned.
-        newQuadTable = QuadTable(newstate.board, self.size,
-                                 copy(self.white_quads), copy(self.black_quads), initialize = False)
+        cwq = copy(self.white_quads)
+        cbq = copy(self.black_quads)
+        newQuadTable = QuadTable(newstate.board, self.size, cwq, cbq, initialize = False)
         
         # Check which action was made.
         if isinstance(action, MoveAction):
@@ -103,8 +104,31 @@ class QuadTable():
 
 
     def updateSurroundingCells(self, x, y, player):
+        print "updating", self.getQuadType(x, y, player), "to", findQuadType(x, y, self.board, self.size, player), player
         self.setQuadType(x, y, findQuadType(x, y, self.board, self.size, player), player)
+
+        print "updating", self.getQuadType(x-1, y, player), "to", findQuadType(x-1, y, self.board, self.size, player), player
         self.setQuadType(x-1, y, findQuadType(x-1, y, self.board, self.size, player), player)
+        
+        print "updating", self.getQuadType(x, y-1, player), "to", findQuadType(x, y-1, self.board, self.size, player), player
         self.setQuadType(x, y-1, findQuadType(x, y-1, self.board, self.size, player), player)
+        
+        print "updating", self.getQuadType(x-1, y-1, player), "to", findQuadType(x-1, y-1, self.board, self.size, player), player
         self.setQuadType(x-1, y-1, findQuadType(x-1, y-1, self.board, self.size, player), player)
 
+    def __eq__(self, other):
+        if self.size != other.size:
+            return False
+
+        for x in range(-1, self.size):
+            for y in range(-1, self.size):
+                if self.black_quads[(x,y)] != other.black_quads[(x,y)]:
+                    return False
+                if self.white_quads[(x,y)] != other.white_quads[(x,y)]:
+                    return False
+                
+        return True
+    
+    def __ne__(self, other):
+        return not self.__eq__(other)
+    
