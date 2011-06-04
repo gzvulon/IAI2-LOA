@@ -5,6 +5,7 @@ from s_end_timer import checkTime, TimeOutException
 from s_turn_cache import TurnCache, NoneTurnCache
 from loa_game import LinesOfActionState
 from s_end_timer import EndTimer
+from s_statistics import GTimeStatistics
 
 # A bloody large number.
 INFINITY = 1.0e400
@@ -56,12 +57,13 @@ class SmartAlphaBetaSearch:
         #
         best_value = -INFINITY
         
+        EndTimer.check(name="a")
         #successors = current_state.getSuccessors()
         successors = self.turn_cache.get(current_state, LinesOfActionState.getSuccessors)
         
         
         for action, state in successors.items():
-            checkTime(self.end_time)
+            EndTimer.check(name="b")
             
             state_info = {} #todo initiate state info
             value = self._minValue(state, best_value, INFINITY, 1,max_depth, state_info)
@@ -87,6 +89,7 @@ class SmartAlphaBetaSearch:
         if w != 0:
             return True,w
         
+        EndTimer.check(name="c")
         # if reached depth limit: evaluate node using heuristics
         if depth >= max_depth:
             u_res = self.turn_cache.get(state, self.utility, self.end_time)
@@ -109,10 +112,11 @@ class SmartAlphaBetaSearch:
         #ordered_successors = self.f_oreder(successors,depth,max_depth)
         
         for action, successor_state in successors.items():
-            checkTime(self.end_time)
+            EndTimer.check(name="d")
             # update iterative info for son node
             new_info_set = self._update_info_set(info_set, state, action, successor_state)
             # calculate minimum for son
+            EndTimer.check(name="e")
             min_value = self._minValue(successor_state, alpha, beta, depth + 1,max_depth, new_info_set )
             value = max(value,min_value)
             if value >= beta: # cut
@@ -127,17 +131,19 @@ class SmartAlphaBetaSearch:
         
         value = INFINITY
         
-        checkTime(self.end_time)
+        EndTimer.check(name="f")
         #successors = state.getSuccessors()
         successors = self.turn_cache.get(state, LinesOfActionState.getSuccessors)
         
         # -- reordering --
         #ordered_successors = self.f_oreder(successors,depth,max_depth)
-        
+        GTimeStatistics.start_measure("successors.items()")
         for action, successor_state in successors.items():
-            checkTime(self.end_time)
+            GTimeStatistics.stop_measure("successors.items()")
+            EndTimer.check(name="g")
             # update iterative info for son node
             new_info_set = self._update_info_set(info_set, state, action, successor_state)
+            EndTimer.check(name="h")
             max_value = self._maxValue(successor_state, alpha, beta, depth + 1,max_depth,new_info_set)
             
             value = min(value,max_value)
@@ -151,9 +157,10 @@ class SmartAlphaBetaSearch:
     #todo: test is
     def _update_info_set(self,info_dict, state, action, successor_state):
         new_info_dict = {}
-        for k,v in info_dict:
-            new_info_dict[k] = v.update(state, action, successor_state)
         return new_info_dict
+#        for k,v in info_dict:
+#            new_info_dict[k] = v.update(state, action, successor_state)
+#        return new_info_dict
     
     # =========================  OPTIONS ===============================
     # ------------------------  check winner options --------------------

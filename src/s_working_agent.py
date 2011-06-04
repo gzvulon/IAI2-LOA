@@ -2,6 +2,7 @@ from s_heuristics import winner_heuristics
 from game_agent import GameAgent
 from s_eval_mass import CenterMassEvaluator
 from s_alpha_beta import AnyTimeSmartAlphaBeta
+from s_statistics import GTimeStatistics
 
 class AnytimeSmartAlphaBetaPrintAgentParams(GameAgent):
 
@@ -10,10 +11,10 @@ class AnytimeSmartAlphaBetaPrintAgentParams(GameAgent):
         self.depth_delta = depth_delta
         
     def h(self,state,end_time):
-        r = winner_heuristics(state, self.player)
-        if r == 0:
+            GTimeStatistics.start_measure("heur")
             r = self.evaluator.evaluate(state, self.player,end_time)
-        return r
+            GTimeStatistics.stop_measure("heur")
+            return r
     
     def info_print(self,game_state):
         pass

@@ -40,7 +40,10 @@ class GameRunner():
             action = agent.move(state)
             turn_time = clock() - start
             if turn_time > self.turn_time_limit:
-                raise Exception(str(state.getCurrentPlayer()) + ' failed to return a move in time.')
+                raise Exception(str(state.getCurrentPlayer()) + 
+                                ' failed to return a move in time.' + 
+                                ' turn_time:'+ str(turn_time) + 
+                                ' instead of' +  str(self.turn_time_limit))
             
             successors = state.getSuccessors()
             if action not in successors.keys():
