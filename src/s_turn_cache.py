@@ -5,6 +5,7 @@ Created on Jun 2, 2011
 @author: inesmeya
 """
 from loa_game import WHITE
+from s_statistics import TimeStatisticsClass
 
 def get_or_set_init(the_dict,key, lazy_init_value, verbose=False):
     ''' 
@@ -55,6 +56,7 @@ class TurnCache():
     def __init__(self):
         self.checkers_left_table = {}
         self.statistics = Statistics()
+        self.time_statistics = TimeStatisticsClass()
         
     def get(self,current_state, func, *agrs):
         return self.get_cached_value(current_state, func, *agrs)
@@ -64,12 +66,15 @@ class TurnCache():
         @param current_state: state of LinesOfActionState
         @param func: LinesOfActionState -> value
         '''
+        def action():
+            return self.time_statistics.measure_function(func,current_state,*agrs)
+        
         turn_info = self._get_turn_info(current_state)
         func_value, isNew = get_or_set_init(  turn_info, func.__name__, 
-                                              lambda: func(current_state,*agrs),
-                                              verbose=True)
+                                              action, verbose=True)
         
-        self.statistics.add(isNew, func.__name__)        
+        self.statistics.add(isNew, func.__name__)
+                
         return func_value 
 
 

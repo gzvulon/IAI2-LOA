@@ -8,18 +8,19 @@ from s_evaluator import Evaluator, UpdatableTable
 from loa_game import WHITE, BLACK, EMPTY
 import sys
 from s_end_timer import EndTimer
+from s_statistics import TimeStatisticsClass, GTimeStatistics
 
 g_end_time = None
 
 def initialize(board):
         # {WHITE : [(x,y),(x1,y1),...], BLACK : [(x,y),(x1,y1),...]}
-        EndTimer.check()
+        EndTimer.check(name="cm_a")
         coord_repr = state_to_coord_repr(board)
         # central of mass dict {WHITE : (x,y) , BLACK : [(x,y),(x1,y1),...]}
         cm_dict ={}
-        EndTimer.check()
+        EndTimer.check(name="cm_b")
         cm_dict[WHITE] = center_of_mass_from_coord_list(coord_repr[WHITE])
-        EndTimer.check()
+        EndTimer.check(name="cm_c")
         cm_dict[BLACK] = center_of_mass_from_coord_list(coord_repr[BLACK])
         res = CenterMassTable(coord_repr,cm_dict)
         return res
@@ -103,9 +104,14 @@ class CenterMassEvaluator(Evaluator):
     
     def sum_of_min_distances_ext2(self,cm,coord_list):
         dists = map(lambda p: self.distance(cm,p), coord_list)
+        
+        EndTimer.check(name="cm_d")
         dsum = sum(dists)
         dmin = min(dists)
+        
+        EndTimer.check(name="cm_e")
         dmin_count = dists.count(dmin)
+        
         dmin_sum = dmin * dmin_count
         smart_sum = dsum - dmin_sum
         smart_sum_count = len(coord_list) - dmin_count
@@ -134,20 +140,22 @@ class CenterMassEvaluator(Evaluator):
         
         cmt = initialize(state.board)
         cmt.coord_repr
-        EndTimer.check()
+        EndTimer.check(name="cm_f")
         
         my_coord_list = cmt.coord_repr[player]
         cm = cmt.cm_dict[player]
-        EndTimer.check()
         
+        EndTimer.check(name="cm_g")
+        
+        GTimeStatistics.start_measure("sum_of_min_distances_ext2")
         rsmd = self.sum_of_min_distances_ext2(cm,my_coord_list)
+        GTimeStatistics.stop_measure("sum_of_min_distances_ext2")
+        
         smart_sum, smart_sum_count, dsum, dmin_sum, dmin, dmin_count = rsmd
         
         r1 = self.min_sum_res(smart_sum_count, smart_sum)
-        EndTimer.check()
-        
         r2 = self.min_sum_fix(dmin, dmin_count, len(my_coord_list))
-        EndTimer.check()
+        
         
         return r1, r2
         
