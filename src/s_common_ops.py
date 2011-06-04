@@ -1,8 +1,7 @@
 from loa_game import WHITE, BLACK, EMPTY
-import time
 
-def findDest(action):
-    dist = calcMoveDist(action)
+def findDest(action, board, size):
+    dist = calcMoveDist(action, board, size)
     to_x = action.col + dist * action.direction.delta[1]
     to_y = action.row + dist * action.direction.delta[0]
     return to_y, to_x
@@ -14,7 +13,7 @@ def calcMoveDist(action, board, size):
     x = action.col
     y = action.row
     while x >= 0 and y >= 0 and x < size and y < size:
-#            print '(',x,',',y,') = ', board[y][x]
+#        print '(',x,',',y,') = ', board[y][x]
         if board[y][x] != EMPTY:
             dist += 1
         x += action.direction.delta[1]
@@ -25,7 +24,7 @@ def calcMoveDist(action, board, size):
     x = action.col
     y = action.row
     while x >= 0 and y >= 0 and x < size and y < size:
-#            print '(',x,',',y,') = ', board[y][x]
+#        print '(',x,',',y,') = ', board[y][x]
         if board[y][x] != EMPTY:
             dist += 1
         x += -action.direction.delta[1]

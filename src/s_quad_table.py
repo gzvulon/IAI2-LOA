@@ -1,12 +1,11 @@
-from loa_games import EMPTY, WHITE, BLACK
-from bundlebuilder import copy
-from loa_game import MoveAction
+from loa_game import MoveAction, WHITE, BLACK, EMPTY
 from s_common_ops import findQuadType, other_player, findDest
+from copy import copy
 
 
 class QuadTable():
 
-    def __init__(self, board, size):
+    def __init__(self, board, size, white_quads = None, black_quads = None, initialize = True):
         '''
         Constructor.
         
@@ -15,13 +14,22 @@ class QuadTable():
         '''
         self.size = size
         self.board = board
-        self.white_quads = {}
-        self.black_quads = {}
+
+        if white_quads != None:
+            self.white_quads = white_quads
+        else:
+            self.white_quads = {}
         
-        for x in range(-1, size):
-            for y in range(-1, size):
-                self.setQuadType(x, y, findQuadType(x, y, board, size, WHITE), WHITE)
-                self.setQuadType(x, y, findQuadType(x, y, board, size, BLACK), BLACK)
+        if black_quads != None:
+            self.black_quads = black_quads
+        else:
+            self.black_quads = {}             
+        
+        if initialize:
+            for x in range(-1, size):
+                for y in range(-1, size):
+                    self.setQuadType(x, y, findQuadType(x, y, board, size, WHITE), WHITE)
+                    self.setQuadType(x, y, findQuadType(x, y, board, size, BLACK), BLACK)
 
     def getQuadType(self, x, y, player):
         if x >= -1 and x < self.size and y >=-1 and y < self.size:
@@ -57,26 +65,37 @@ class QuadTable():
                     
         return float(q1-q3-2*qd)/4
 
-
-    def update(self, state, action, newstate = None):
-        newQuadTable = copy(self)
+    def update(self, state, action, newstate):
+        # Created a new quad table to be updated and returned.
+        newQuadTable = QuadTable(newstate.board, self.size,
+                                 copy(self.white_quads), copy(self.black_quads), initialize = False)
+        
+        # Check which action was made.
         if isinstance(action, MoveAction):
-            newQuadTable.movePiece(action)
+            newQuadTable.movePiece(action, state)
+        else: # is instance of SpinAction
+            newQuadTable.spin(action)
+            
+        return newQuadTable
 
 
-    def movePiece(self, action):
+    def spin(self):
+        pass
+
+
+    def movePiece(self, action, state):
         from_x = action.col
         from_y = action.row
         player = self.board[action.row][action.col]
         
-        to_y, to_x = findDest(action, self.board, self.size)
+        to_y, to_x = findDest(action, state.board, state.size)
         
-        self.board[from_y][from_x] = EMPTY
+#        print "moving from (",from_x,",",from_y,") to (",to_x,",",to_y,")"
+        
+        capture = False
         if self.board[to_y][to_x] == other_player(player):
             capture = True
             
-        self.board[to_y][to_x] = player
-        
         self.updateSurroundingCells(from_x, from_y, player)
         self.updateSurroundingCells(to_x, to_y, player)
         if capture:
