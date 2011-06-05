@@ -4,6 +4,8 @@ Created on May 27, 2011
 
 @author: inesmeya
 """
+import st_import 
+
 from s_agents import  DummyAgent, RandomAgent
 from loa_game import WHITE, BLACK, LinesOfActionState
 from game_runner import GameRunner
