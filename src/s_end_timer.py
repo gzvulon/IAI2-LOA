@@ -24,9 +24,16 @@ class TimeOutException(Exception):
 class EndTimerClass():
     def __init__(self):
         self.end_time = None
-        
         self.last_name =("noname",-1)
         self.prev_name =("noname",-1)
+    
+    def set_limit_and_start(self,limit):
+        start_time = time.clock()
+        end_time   = start_time + limit
+        self.set(end_time)
+    
+    def time_left(self):
+        return self.end_time - time.clock()
     
     def set(self,end_time):
         self.end_time = end_time
@@ -35,7 +42,7 @@ class EndTimerClass():
     def stop(self,end_time=None):
         end_timer()
             
-    def check(self,safe_delta=0, name="not set"):
+    def check(self,name="not set",safe_delta=0):
         if self.end_time == None: return
         self.save_name( name)
         checkTime(self.end_time,safe_delta)

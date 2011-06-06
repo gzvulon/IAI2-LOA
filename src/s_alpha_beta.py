@@ -9,14 +9,9 @@ from s_statistics import GTimeStatistics
 from s_common_ops import random_tag
 from s_quad_table import QuadTable
 import s_quad_table
+from s_enums import QUAD_TABLE_TAG, SIMPLE_WINNER, QUAD_WINNER, INFINITY
 
-# A bloody large number.
-INFINITY = 1.0e400
 
-# winner_check options
-QUAD_WINNER = True
-SIMPLE_WINNER = False
-#----------------------
 
 #
 class SmartAlphaBetaSearch:
@@ -39,16 +34,16 @@ class SmartAlphaBetaSearch:
         self.turn_cache = turn_cache
         #self.max_depth = max_depth
         self.utility = utility
-        self.quad_table = None
         #self.info_
         
         self.f_checkWinner = { 
             SIMPLE_WINNER: self._checkWinnerSimple,
             QUAD_WINNER:   self._checkWinnerEuler,
         }[winner_check]
+        
 
     
-    def search(self, current_state, max_depth, end_time, quad_table):
+    def search(self, current_state, max_depth, info_set):
         '''
         Search game to determine best action; use alpha-beta pruning.
         
@@ -56,7 +51,6 @@ class SmartAlphaBetaSearch:
         @return: best_action, best_state
         '''
         # on each search this is renewed!
-        self.end_time = end_time
         #
         best_value = -INFINITY
         
@@ -66,21 +60,23 @@ class SmartAlphaBetaSearch:
         #successors = current_state.getSuccessors()
         successors = self.turn_cache.get(current_state, LinesOfActionState.getSuccessors)
         
+        successors_items = successors.items()
         
         EndTimer.check(name="a1")
         
-        for action, state in successors.items():
+        for action, newstate in successors_items:
             
-            #quad_table_next = quad_table.update(current_state, action, state)
+            new_info_set =  self._update_info_set(current_state, newstate, action, info_set)   
+             
             EndTimer.check(name="b")
             
-            state_info = {} #todo initiate state info
-            value = self._minValue(state, best_value, INFINITY, 1,max_depth, state_info)
+            #state_info = {} # todo initiate newstate info
+            value = self._minValue(newstate, best_value, INFINITY, 1,max_depth, new_info_set)
             
             if value > best_value:
                 best_value = value
                 best_action = action
-                best_state  = state
+                best_state  = newstate
         
         return best_action, best_state
     
@@ -91,17 +87,17 @@ class SmartAlphaBetaSearch:
                        value - node value
                  False,0 - continue searching
         '''
-        checkTime(self.end_time)
+        EndTimer.check("_need_return1")
         # check if node is terminate
         w = self.f_checkWinner(state)
         # if it is : return its value (-1 for enemy, +1 for us)
         if w != 0:
             return True,w
         
-        EndTimer.check(name="c")
+        EndTimer.check("_need_return2")
         # if reached depth limit: evaluate node using heuristics
         if depth >= max_depth:
-            u_res = self.turn_cache.get(state, self.utility, self.end_time)
+            u_res = self.turn_cache.get(state, self.utility)
             return True, u_res# self.utility(state) # new_info_set        
         
         return False,0
@@ -126,12 +122,12 @@ class SmartAlphaBetaSearch:
         successors_items = successors.items()
         GTimeStatistics.stop_measure(str_key)
         
+        
         for action, successor_state in successors_items:
-            
             EndTimer.check(name="d3")
            
             # update iterative info for son node
-            new_info_set = self._update_info_set(info_set, state, action, successor_state)
+            new_info_set =  self._update_info_set(state, successor_state, action, info_set)
             # calculate minimum for son
             EndTimer.check(name="e")
             min_value = self._minValue(successor_state, alpha, beta, depth + 1,max_depth, new_info_set )
@@ -162,7 +158,7 @@ class SmartAlphaBetaSearch:
         for action, successor_state in successors_items:
             EndTimer.check(name="g")
             # update iterative info for son node
-            new_info_set = self._update_info_set(info_set, state, action, successor_state)
+            new_info_set =  self._update_info_set(state, successor_state, action, info_set)   
             EndTimer.check(name="h")
             max_value = self._maxValue(successor_state, alpha, beta, depth + 1,max_depth,new_info_set)
             
@@ -175,16 +171,17 @@ class SmartAlphaBetaSearch:
     
     # ========================= Geneneral ==============================
     #todo: test is
-    def _update_info_set(self,info_dict, state, action, successor_state):
-        new_info_dict = {}
-        return new_info_dict
-#        for k,v in info_dict:
-#            new_info_dict[k] = v.update(state, action, successor_state)
-#        return new_info_dict
-    
+    def _update_info_set(self, oldstate, newstate, action, info_set):
+        
+        new_info_set = {}
+        for info_tag, info_table in info_set.items():
+            new_info_set[info_tag] = self.turn_cache.get_wkt(newstate, # use cache
+                 info_tag, info_tag + '.update', info_table.update,
+                 oldstate, newstate, action )
+        return new_info_set
     # =========================  OPTIONS ===============================
     # ------------------------  check winner options --------------------
-    def _checkWinnerSimple(self,state):
+    def _checkWinnerSimple(self,state, info_set=None):
         ''' returns 0 if no winner, otherwise us +1 they: -1
         '''
         
@@ -199,11 +196,12 @@ class SmartAlphaBetaSearch:
         
         return r
     
-    def _checkWinnerEuler(self,state):
+    def _checkWinnerEuler(self, state, info_set):
         ''' returns 0 if no winner, otherwise us +1 they: -1
         '''
         #TODO: add cache
-        quad_table = ""
+        quad_table = info_set[QUAD_TABLE_TAG]
+        
         euler_number = quad_table.eulerNumber(self.player)
         
         if euler_number > 1.0:
@@ -214,59 +212,29 @@ class SmartAlphaBetaSearch:
 
     def _updateNothig(self,state, action, new_state):
         pass
-
-
-class AnyTimeSmartAlphaBeta():
-    '''The Main Shit'''
     
-    def get_name(self):
-        return "AnyTimeSmartAlphaBeta"
+    # ------------------------ iterative / non iterative ----------------------
     
-    def __init__(self, player, init_max_depth, 
-                 utility, winner_check=SIMPLE_WINNER, 
-                 depth_delta=1, caching =False):
-        self.player = player
-        self.init_max_depth = init_max_depth
-        self.utility = utility
-        self.winner_check = winner_check
-        self.rand = Random(0)
-        self.depth_delta = depth_delta
-        
-        if caching: self.turn_cache = TurnCache()
-        else:       self.turn_cache = NoneTurnCache()
+
+#class AnyTimeSmartAlphaBeta():
+#    '''The Main Shit'''
+#    
+#    def get_name(self):
+#        return "AnyTimeSmartAlphaBeta"
+#    
+#    def __init__(self, player, init_max_depth, 
+#                 utility, winner_check=SIMPLE_WINNER, 
+#                 depth_delta=1, caching =False):
+#        self.player = player
+#        self.init_max_depth = init_max_depth
+#        self.utility = utility
+#        self.winner_check = winner_check
+#        self.rand = Random(0)
+#        self.depth_delta = depth_delta
+#        
+
         
             
-    def search(self, current_state, max_depth, time_limit):
-        #init timer
-        safe_delta = 0.08
-        start_time = time.clock()
-        end_time   = start_time + time_limit - safe_delta
-        EndTimer.set(end_time)
-        #
-        quad_table =  None #self.turn_cache.get(current_state,s_quad_table.create_QuadTable)
-        
-        #turn_info
-        
-        succesors = self.turn_cache.get(current_state, LinesOfActionState.getSuccessors)
-        
-        # choose default move randomly: 
-        index = self.rand.randint(0, len(succesors)-1)
-        res_action, res_state = succesors.items()[index] 
-        
-        # start iterative search
-        curr_max_depth = self.init_max_depth
-        # print "time left", end_time - time.clock(), "d=", curr_max_depth
-        
-        try:
-            while time.clock() < end_time:
-                print  "time left", end_time - time.clock(), "d=", curr_max_depth
-                alg = SmartAlphaBetaSearch(self.player, self.utility, self.turn_cache, self.winner_check)
-                res_action,res_state = alg.search(current_state, curr_max_depth, end_time, quad_table)
-                curr_max_depth += self.depth_delta #TODO: TODO
-        except TimeOutException: #TODO for release handle all exceptios
-            pass
-        
-        EndTimer.stop()
-        return res_action,res_state     
+   
         
         

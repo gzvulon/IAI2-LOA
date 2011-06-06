@@ -10,7 +10,6 @@ import sys
 from s_end_timer import EndTimer
 from s_statistics import TimeStatisticsClass, GTimeStatistics
 
-g_end_time = None
 
 def initialize(board):
         # {WHITE : [(x,y),(x1,y1),...], BLACK : [(x,y),(x1,y1),...]}
@@ -133,7 +132,7 @@ class CenterMassEvaluator(Evaluator):
             res = 1.0 / average
         return res
     
-    def evaluate2(self, state, player, end_time, action =None, quad_table_ext=None):
+    def evaluate2(self, state, player, action =None, quad_table_ext=None):
         '''
         @type state: loa_game.LinesOfActionState
         '''
@@ -159,11 +158,11 @@ class CenterMassEvaluator(Evaluator):
         
         return r1, r2
         
-    def evaluate(self, state, player, end_time, action =None, quad_table_ext=None):
+    def evaluate(self, state, player, action =None, quad_table_ext=None):
         '''
         @type state: loa_game.LinesOfActionState
         '''
-        r1, r2 = self.evaluate2(state, player, end_time, action, quad_table_ext)
+        r1, r2 = self.evaluate2(state, player, action, quad_table_ext)
         return r1 + r2
           
         # calculate center of mass

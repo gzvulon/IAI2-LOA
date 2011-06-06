@@ -51,6 +51,13 @@ class Statistics():
             res['total'] = self.calc_hit_rate(total_falses,total_trues)
         return res
     
+    def __str__(self):
+        return str(self.stats) + str(self.hit_rate())
+    
+    def __repr__(self):
+        return self.__str__()
+        
+    
             
 class TurnCache():
     def __init__(self):
@@ -70,6 +77,9 @@ class TurnCache():
             return self.time_statistics.measure_lambda(func, fuck_key, *args)
         
         turn_info = self._get_turn_info(current_state)
+        if turn_info.has_key(key):
+            return turn_info[key]
+        
         func_value, isNew = get_or_set_init(  turn_info, key, action, verbose=True)       
         self.statistics.add(isNew, key)
         return func_value
@@ -93,7 +103,7 @@ class TurnCache():
                 
         return func_value         
     def get(self,current_state, func, *args):
-        return self.get_wk(current_state, func.__name__,   lambda: func(current_state,*args) )
+        return self.get_wk(current_state, func.__name__, func.__name__,   lambda: func(current_state,*args) )
         #return self.get_cached_value(current_state, func, *agrs)
     
     def get_cached_value(self, current_state, func, *agrs):
@@ -145,6 +155,13 @@ class TurnCache():
         turn_info = get_or_set_init(turn_info_table, current_state, lambda: {})
         return turn_info
 
+    def __str__(self):
+        res =  "Stat:" + str(self.statistics) + "\n"
+        res += "TimeStat:" + str(self.time_statistics) + "\n"
+        return res
+    
+    def __repr__(self):
+        return self.__str__()
     
 class NoneTurnCache():
     '''cache wich does nothing'''

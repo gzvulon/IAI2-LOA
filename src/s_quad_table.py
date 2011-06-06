@@ -146,11 +146,24 @@ class QuadTable():
     def __ne__(self, other):
         return not self.__eq__(other)
 
-def create_or_update_QuadTable(state, action=None, newstate =None):
+def create_QuadTable(state, action=None, newstate =None):
     res = QuadTable(state.board, state.size, initialize = True)
     return res
 
 def update(target_state, old_q_table, old_state, action):
     old_q_table.update(old_state,target_state,action)
     
+
+class QuadTableNoUpdate(QuadTable):
+    def __init__(self, *args):
+        super(QuadTable,self).init(*args)
     
+    def update(self, state, newstate, action):
+        return QuadTableNoUpdate(state.board, state.size, initialize=True)
+    
+    def updateWithoutAction(self, state, newstate):
+        return QuadTableNoUpdate(state.board, state.size, initialize=True)  
+        
+
+    
+        

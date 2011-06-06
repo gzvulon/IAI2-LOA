@@ -88,16 +88,12 @@ class Test(unittest.TestCase):
         
         o.get(state, fun, 23)
     
-    def test__get_variants(self): 
+    def test__get_wkt(self): 
         current_state = LinesOfActionState(6, 50)
         o = TurnCache()
-        v = o.get_variants(current_state, 'getWinner', current_state.getWinner, [])
-        v = o.get_variants(current_state, 'getWinner', current_state.getWinner, []) 
-         
-         (, LinesOfActionState.getWinner)
-        o.get(state, LinesOfActionState.getWinner)
-        self.assertEqual(o.statistics.hit_rate(), 
-        {'getWinner': (0.5, 1, 1), 'total': 0.5})       
+        o.get_wkt(current_state, 'a', 'la', lambda: current_state.getWinner())
+        o.get_wkt(current_state, 'a', 'gw', current_state.getWinner)
+        print o
        
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.test_get_or_set_init']
