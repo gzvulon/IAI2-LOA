@@ -3,9 +3,13 @@ from game_agent import GameAgent
 from s_eval_mass import CenterMassEvaluator
 from s_alpha_beta import AnyTimeSmartAlphaBeta
 from s_statistics import GTimeStatistics
+import inspect
 
 class AnytimeSmartAlphaBetaPrintAgentParams(GameAgent):
-
+    
+    def get_name(self):
+        return self.alphaBeta.get_name() 
+    
     def myinit(self, caching, depth_delta):
         self.caching = caching
         self.depth_delta = depth_delta
@@ -26,7 +30,6 @@ class AnytimeSmartAlphaBetaPrintAgentParams(GameAgent):
 
     
     def move(self, game_state):
-      
         action, next_state = self.alphaBeta.search(game_state,None,self.turn_time_limit)
         return action
     
