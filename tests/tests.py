@@ -15,7 +15,38 @@ import time
 
 
 def main():
-    test4()
+    test5()
+
+
+def test5():
+    ''' hash items()'''
+    root = LinesOfActionState(10, 50)
+    succs = root.getSuccessors().items()[0][1].getSuccessors()
+    dd = {}
+    
+    def count(d):
+        k,v = d.popitem()
+        r = v.getSuccessors()
+        d[k]=v
+        sum = 0
+        #for k in d.items():
+        #    sum += 1
+        return sum
+    
+    def counts():
+        smax = -1
+        smin = 10000000
+        for _ in xrange(1000):
+            sum = GTimeStatistics.measure_function(count,succs)
+            smax = max(smax,sum)
+            smin = min(smin,sum)
+        return smax,smin
+        
+    smax,smin = GTimeStatistics.measure_function(counts)
+    print GTimeStatistics
+    print smax,smin
+    
+
 
 def test4():
     stats = TimeStatisticsClass()
