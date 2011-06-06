@@ -121,6 +121,7 @@ class Test(unittest.TestCase):
         self.quadTable8 = QuadTable(self.board12, 8)
         self.state8 = LinesOfActionState(8, 50, self.board12, 6, 6)
        
+
     def tearDown(self):
         pass
 
@@ -140,7 +141,6 @@ class Test(unittest.TestCase):
 
 
     def testQuadBoardInit(self):
-
         self.assertEqual('Q1', self.quadTable1.getQuadType(-1, -1, 'B'))
         self.assertEqual('Q0', self.quadTable1.getQuadType(0, 1, 'B'))
         self.assertEqual('Qd', self.quadTable1.getQuadType(1, 0, 'B'))
