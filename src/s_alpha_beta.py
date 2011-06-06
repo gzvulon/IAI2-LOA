@@ -7,6 +7,8 @@ from loa_game import LinesOfActionState
 from s_end_timer import EndTimer
 from s_statistics import GTimeStatistics
 from s_common_ops import random_tag
+from s_quad_table import QuadTable
+import s_quad_table
 
 # A bloody large number.
 INFINITY = 1.0e400
@@ -46,7 +48,7 @@ class SmartAlphaBetaSearch:
         }[winner_check]
 
     
-    def search(self, current_state, max_depth, end_time):
+    def search(self, current_state, max_depth, end_time, quad_table):
         '''
         Search game to determine best action; use alpha-beta pruning.
         
@@ -58,13 +60,18 @@ class SmartAlphaBetaSearch:
         #
         best_value = -INFINITY
         
+       
+        
         EndTimer.check(name="a")
         #successors = current_state.getSuccessors()
         successors = self.turn_cache.get(current_state, LinesOfActionState.getSuccessors)
         
+        
         EndTimer.check(name="a1")
         
         for action, state in successors.items():
+            
+            #quad_table_next = quad_table.update(current_state, action, state)
             EndTimer.check(name="b")
             
             state_info = {} #todo initiate state info
@@ -228,13 +235,15 @@ class AnyTimeSmartAlphaBeta():
         if caching: self.turn_cache = TurnCache()
         else:       self.turn_cache = NoneTurnCache()
         
-        
+            
     def search(self, current_state, max_depth, time_limit):
         #init timer
         safe_delta = 0.08
         start_time = time.clock()
         end_time   = start_time + time_limit - safe_delta
         EndTimer.set(end_time)
+        #
+        quad_table =  None #self.turn_cache.get(current_state,s_quad_table.create_QuadTable)
         
         #turn_info
         
@@ -252,7 +261,7 @@ class AnyTimeSmartAlphaBeta():
             while time.clock() < end_time:
                 print  "time left", end_time - time.clock(), "d=", curr_max_depth
                 alg = SmartAlphaBetaSearch(self.player, self.utility, self.turn_cache, self.winner_check)
-                res_action,res_state = alg.search(current_state, curr_max_depth, end_time)
+                res_action,res_state = alg.search(current_state, curr_max_depth, end_time, quad_table)
                 curr_max_depth += self.depth_delta #TODO: TODO
         except TimeOutException: #TODO for release handle all exceptios
             pass

@@ -57,9 +57,44 @@ class TurnCache():
         self.checkers_left_table = {}
         self.statistics = Statistics()
         self.time_statistics = TimeStatisticsClass()
+    
+    def get_wkt(self,current_state, key, fuck_key, func, *args):
+        '''  get with key
+        Using provided key instead of function name
+        @param current_state: state of LinesOfActionState
+        @param func: ()->value
+        @param key: function name or other id
+        '''
+        def action():
+            # return func(args*)
+            return self.time_statistics.measure_lambda(func, fuck_key, *args)
         
-    def get(self,current_state, func, *agrs):
-        return self.get_cached_value(current_state, func, *agrs)
+        turn_info = self._get_turn_info(current_state)
+        func_value, isNew = get_or_set_init(  turn_info, key, action, verbose=True)       
+        self.statistics.add(isNew, key)
+        return func_value
+        
+        
+    def get_wk(self,current_state, key, fuck_key, func, *args):
+        '''  get with key
+        Using provided key instead of function name
+        @param current_state: state of LinesOfActionState
+        @param func: ()->value
+        @param key: function name or other id
+        '''
+        def action():
+            # return func(args*)
+            return self.time_statistics.measure_lambda(func, key, *args)
+        
+        turn_info = self._get_turn_info(current_state)
+        func_value, isNew = get_or_set_init(  turn_info, key, action, verbose=True)       
+        self.statistics.add(isNew, key)
+        return func_value
+                
+        return func_value         
+    def get(self,current_state, func, *args):
+        return self.get_wk(current_state, func.__name__,   lambda: func(current_state,*args) )
+        #return self.get_cached_value(current_state, func, *agrs)
     
     def get_cached_value(self, current_state, func, *agrs):
         '''
@@ -67,6 +102,7 @@ class TurnCache():
         @param func: LinesOfActionState -> value
         '''
         def action():
+            # return func(args*)
             return self.time_statistics.measure_function(func,current_state,*agrs)
         
         turn_info = self._get_turn_info(current_state)
@@ -106,25 +142,35 @@ class TurnCache():
     def _get_turn_info(self,current_state):
         checkers_left = (current_state.whites, current_state.blacks)
         turn_info_table = get_or_set_init(self.checkers_left_table,checkers_left, lambda: {} )
-        turn_info,isNew = get_or_set_init(turn_info_table, current_state, lambda: {},verbose=True  )
-        self.statistics.add(isNew, 'states')
+        turn_info = get_or_set_init(turn_info_table, current_state, lambda: {})
         return turn_info
+
     
 class NoneTurnCache():
-    ''' Dummy cache'''
+    '''cache wich does nothing'''
     
     def __init__(self):
         self.statistics = Statistics()
+        self.time_statistics = TimeStatisticsClass() #??
     
-    def get(self,current_state, func,*agrs):
-        return self.get_cached_value(current_state, func,*agrs)    
+    def get_wk(self,current_state, key, func, *args):
+        # todo: add time measurment
+        return func(*args)   
     
     def get_cached_value(self, current_state, func,*agrs):
         '''
         @param current_state: state of LinesOfActionState
         @param func: LinesOfActionState -> value
         '''
-        return func(current_state,*agrs)
+        # todo: add time measurment
+        return func(current_state,*agrs)    
+    
+    def get(self,current_state, func,*agrs):
+        return self.get_cached_value(current_state, func, *agrs)    
+    
+    
+    def get_wkt(self,current_state, key, fuck_key, func, *args):
+        return self.get_wk(current_state, key, func)
     
     def clean_up_if_need(self, game_state, next_state):
         '''Removes all states that can't be reached 

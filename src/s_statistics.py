@@ -86,6 +86,7 @@ class TimeStatisticsClass():
 
 
 class NodeStatisticsClass():
+    pass
         
 GTimeStatistics = TimeStatisticsClass()    
     

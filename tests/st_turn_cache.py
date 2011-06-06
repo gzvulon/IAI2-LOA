@@ -77,7 +77,7 @@ class Test(unittest.TestCase):
         o.get(state, LinesOfActionState.getWinner)
         o.get(state, LinesOfActionState.getWinner)
         self.assertEqual(o.statistics.hit_rate(), 
-        {'states': (0.5, 1, 1), 'getWinner': (0.5, 1, 1), 'total': 0.5})
+        {'getWinner': (0.5, 1, 1), 'total': 0.5})
         
     def test__get_multiple_params(self):
         state = LinesOfActionState(6, 50)
@@ -87,7 +87,17 @@ class Test(unittest.TestCase):
             print self.assertEqual(p, 23)
         
         o.get(state, fun, 23)
-            
+    
+    def test__get_variants(self): 
+        current_state = LinesOfActionState(6, 50)
+        o = TurnCache()
+        v = o.get_variants(current_state, 'getWinner', current_state.getWinner, [])
+        v = o.get_variants(current_state, 'getWinner', current_state.getWinner, []) 
+         
+         (, LinesOfActionState.getWinner)
+        o.get(state, LinesOfActionState.getWinner)
+        self.assertEqual(o.statistics.hit_rate(), 
+        {'getWinner': (0.5, 1, 1), 'total': 0.5})       
        
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.test_get_or_set_init']
