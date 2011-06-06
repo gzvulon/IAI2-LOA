@@ -165,5 +165,13 @@ class QuadTableNoUpdate(QuadTable):
         return QuadTableNoUpdate(state.board, state.size, initialize=True)  
         
 
+class QuadTableDoesNothing():
+    
+    def update(self, *args):
+        return self
+    
+    def updateWithoutAction(self, *args):
+        return self  
+        
     
         

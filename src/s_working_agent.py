@@ -15,13 +15,17 @@ class AnytimeSmartAlphaBetaPrintAgentParams(GameAgent):
     def get_name(self):
         return self.alphaBeta.get_name()
     
-    def myinit(self, caching, init_max_depth, depth_delta, use_iterative):
-        ''' allow to confine agent'''
+    def myinit(self, caching, init_max_depth, depth_delta,  use_iterative):
+        ''' 
+        use string names names
+        allow to confine agent'''
         self.caching = caching
         self.depth_delta = depth_delta
         self.use_iterative = use_iterative
         self.rand = Random(0)
         self.init_max_depth = init_max_depth
+        
+        self.use_quads = False
         
         #TODO:
         self.winner_check = SIMPLE_WINNER 
@@ -67,9 +71,9 @@ class AnytimeSmartAlphaBetaPrintAgentParams(GameAgent):
         
      
     # ---------------------  The heuristics ------------------------------    
-    def utility(self,state):
+    def utility(self,state,info_set):
         GTimeStatistics.start_measure("heur")
-        r = self.evaluator.evaluate(state, self.player)
+        r = self.evaluator.evaluate(state, self.player,info_set)
         GTimeStatistics.stop_measure("heur")
         return r
     
@@ -141,7 +145,7 @@ class AnytimeSmartAlphaBetaPrintAgentParams(GameAgent):
         while True:
             EndTimer.check("start search")
             print  "time left", EndTimer.time_left(), "d=", curr_max_depth
-            alg = SmartAlphaBetaSearch(self.player, self.utility, self.turn_cache, self.winner_check)
+            alg = SmartAlphaBetaSearch(self.player, self.utility, self.turn_cache, self.winner_check,self.use_quads)
             self.res_action, self.res_state, self.res_info_set = alg.search(current_state, curr_max_depth, info_set)
             curr_max_depth += self.depth_delta #TODO: TODO
         

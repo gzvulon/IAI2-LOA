@@ -187,7 +187,7 @@ class NoneTurnCache():
     
     
     def get_wkt(self,current_state, key, fuck_key, func, *args):
-        return self.get_wk(current_state, key, func)
+        return self.get_wk(current_state, key, func, *args)
     
     def clean_up_if_need(self, game_state, next_state):
         '''Removes all states that can't be reached 

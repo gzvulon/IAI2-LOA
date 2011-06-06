@@ -42,7 +42,7 @@ ar = RandomAgent()
 agents[ WHITE ] = a2
 agents[ BLACK ] = a1
 
-state = LinesOfActionState(8, 5)
+state = LinesOfActionState(6, 20)
 
 #try:
 winner = GameRunner(state, agents, 5.5 , 1).run()

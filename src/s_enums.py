@@ -18,5 +18,9 @@ SIMPLE_WINNER = False
 ITERATIVE = True
 NON_ITERATIVE = False
 
+#use quads or not?
+USE_QUADS = True
+DONT_USE_QUADS = False
+
 # info set tags
 QUAD_TABLE_TAG ='quad_table'
