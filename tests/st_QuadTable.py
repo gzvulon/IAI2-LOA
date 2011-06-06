@@ -201,8 +201,8 @@ class Test(unittest.TestCase):
 
 
     def testMoveUpdate(self):
-        u1 = self.quadTable3.update(self.state3, self.move4, self.state4)
-        u2 = self.quadTable4.update(self.state4, self.move5, self.state5)
+        u1 = self.quadTable3.update(self.state3, self.state4, self.move4)
+        u2 = self.quadTable4.update(self.state4, self.state5, self.move5)
         
         self.assertNotEqual(self.quadTable3, u1)
         self.assertEqual(self.quadTable4, u1)
@@ -212,8 +212,8 @@ class Test(unittest.TestCase):
 
 
     def testSpinUpdate(self):
-        u1 = self.quadTable6.update(self.state6, self.spin6, self.state7)
-        u2 = self.quadTable7.update(self.state7, self.spin7, self.state8)
+        u1 = self.quadTable6.update(self.state6, self.state7, self.spin6)
+        u2 = self.quadTable7.update(self.state7, self.state8, self.spin7)
         
         self.assertNotEqual(self.quadTable6, u1)
         self.assertEqual(self.quadTable7, u1)
@@ -240,6 +240,24 @@ class Test(unittest.TestCase):
 #                print self.quadTable8.black_quads[(x,y)], 
 #            print
         
+    def testUpdateWithoutAction(self):
+        u1 = self.quadTable3.updateWithoutAction(self.state3, self.state4)
+        u2 = self.quadTable4.updateWithoutAction(self.state4, self.state5)
+        
+        self.assertNotEqual(self.quadTable3, u1)
+        self.assertEqual(self.quadTable4, u1)
+
+        self.assertNotEqual(self.quadTable4, u2)
+        self.assertEqual(self.quadTable5, u2)
+        
+        u3 = self.quadTable6.updateWithoutAction(self.state6, self.state7)
+        u4 = self.quadTable7.updateWithoutAction(self.state7, self.state8)
+        
+        self.assertNotEqual(self.quadTable6, u3)
+        self.assertEqual(self.quadTable7, u3)
+
+        self.assertNotEqual(self.quadTable7, u4)
+        self.assertEqual(self.quadTable8, u4)       
 
 def count_types(quadTable, player):
     count_types = {'Q0':0, 'Q1':0, 'Q2':0, 'Q3':0, 'Q4':0, 'Qd':0}

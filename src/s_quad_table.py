@@ -66,7 +66,7 @@ class QuadTable():
         return float(q1-q3-2*qd)/4
 
 
-    def update(self, state, action, newstate):
+    def update(self, state, newstate, action):
         # Create a new quad table to be updated and returned.
         cwq = copy(self.white_quads)
         cbq = copy(self.black_quads)
@@ -81,6 +81,22 @@ class QuadTable():
 
         return newQuadTable
 
+
+    def updateWithoutAction(self, state, newstate):
+        # Create a new quad table to be updated and returned.
+        cwq = copy(self.white_quads)
+        cbq = copy(self.black_quads)
+        newQuadTable = QuadTable(newstate.board, self.size, cwq, cbq, 
+                                                            initialize = False)
+        
+        # find which cells where changed, and update the corresponding quads.
+        for x in range(0, state.size):
+            for y in range(0, state.size):
+                if state.board[y][x] != newstate.board[y][x]:
+                    for player in [WHITE, BLACK]:
+                        newQuadTable.updateSurroundingCells(x, y, player)
+
+        return newQuadTable
 
     def spin(self, action, state):
         for player in [WHITE, BLACK]:
