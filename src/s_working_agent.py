@@ -46,9 +46,6 @@ class AnytimeSmartAlphaBetaPrintAgentParams(GameAgent):
         self.safe_delta = 0.085
         self.corrected_turn_time_limit = turn_time_limit - self.safe_delta
         self.player = player
-        
-        # choose evaluator
-        self.evaluator = CenterMassEvaluator()
 
         #TODO: check set_uptime
         
@@ -64,16 +61,21 @@ class AnytimeSmartAlphaBetaPrintAgentParams(GameAgent):
         if self.caching: self.turn_cache = TurnCache()
         else:       self.turn_cache = NoneTurnCache()
 
-        
+ 
      
     # ---------------------  The heuristics ------------------------------    
-    def utility(self,state):
+    def utility(self, state, info_set):
         GTimeStatistics.start_measure("heur")
-        r = self.evaluator.evaluate(state, self.player)
+        r = self.evaluator(state, self.player, info_set)
         GTimeStatistics.stop_measure("heur")
         return r
-    
-    def info_print(self,game_state):
+
+        # choose evaluator
+    def evaluator(self, state, player, info_set):
+        com = CenterMassEvaluator().evaluate(state, player, action, info_set)
+
+            
+    def info_print(self, game_state):
         pass
 #        print "The heuristics of game state"
 #        print game_state

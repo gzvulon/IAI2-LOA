@@ -14,7 +14,8 @@ class QuadTable():
         '''
         self.size = size
         self.board = board
-
+        self.euler = {}
+        
         if white_quads != None:
             self.white_quads = white_quads
         else:
@@ -30,6 +31,8 @@ class QuadTable():
                 for y in range(-1, size):
                     self.setQuadType(x, y, findQuadType(x, y, board, size, WHITE), WHITE)
                     self.setQuadType(x, y, findQuadType(x, y, board, size, BLACK), BLACK)
+            
+            self.calcEulerNumber()
 
     def getQuadType(self, x, y, player):
         if x >= -1 and x < self.size and y >=-1 and y < self.size:
@@ -49,21 +52,26 @@ class QuadTable():
 
 
     def eulerNumber(self, player):
-        q1 = 0
-        q3 = 0
-        qd = 0
-        
-        for x in range(-1, self.size):
-            for y in range(-1, self.size):
-                quadType = self.getQuadType(x, y, player)
-                if quadType == 'Q1':
-                    q1 += 1
-                elif quadType == 'Q3':
-                    q3 += 1
-                elif quadType == 'Qd':
-                    qd += 1
-                    
-        return float(q1-q3-2*qd)/4
+        return self.euler[player]
+
+
+    def calcEulerNumber(self):
+        for player in [WHITE, BLACK]:
+            q1 = 0
+            q3 = 0
+            qd = 0
+            
+            for x in range(-1, self.size):
+                for y in range(-1, self.size):
+                    quadType = self.getQuadType(x, y, player)
+                    if quadType == 'Q1':
+                        q1 += 1
+                    elif quadType == 'Q3':
+                        q3 += 1
+                    elif quadType == 'Qd':
+                        qd += 1
+                        
+            self.euler[player] = float(q1-q3-2*qd)/4
 
 
     def update(self, state, newstate, action):
@@ -79,6 +87,8 @@ class QuadTable():
         else: # is instance of SpinAction
             newQuadTable.spin(action, state)
 
+        newQuadTable.calcEulerNumber()
+        
         return newQuadTable
 
 
@@ -97,6 +107,7 @@ class QuadTable():
                         newQuadTable.updateSurroundingCells(x, y, player)
 
         return newQuadTable
+
 
     def spin(self, action, state):
         for player in [WHITE, BLACK]:
