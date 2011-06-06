@@ -5,7 +5,7 @@ Created on May 27, 2011
 '''
 import unittest
 from s_quad_table import QuadTable
-from loa_game import MoveAction, Direction, LinesOfActionState
+from loa_game import MoveAction, Direction, LinesOfActionState, SpinAction
 from s_common_ops import findQuadType, calcMoveDist
 
 
@@ -29,6 +29,10 @@ class Test(unittest.TestCase):
                        (' ', 'W', 'W'))
         
         self.quadTable1 = QuadTable(self.board5, 3)
+        
+        self.move1 = MoveAction(3, 3, Direction("W", (0, -1)))
+        self.move2 = MoveAction(2, 4, Direction("SW", (1, -1)))   
+        self.move3 = MoveAction(6, 0, Direction("E", (0, 1)))
         
         self.board6 = ( (' ',' ',' ',' ',' ',' ',' ',' ',) , 
                         ('B',' ','B',' ',' ',' ',' ',' ',) , 
@@ -63,7 +67,7 @@ class Test(unittest.TestCase):
                         (' ','W','W','W','W','W','W',' ',) )
   
         self.quadTable4 = QuadTable(self.board8, 8)
-        self.quadTable4t = QuadTable(self.board8, 8)
+        self.move4 = MoveAction(6, 0, Direction("E", (0, 1)))
         self.state4 = LinesOfActionState(8, 50, self.board8, 6, 6)
 
         self.board9 = ( (' ','W',' ','W','W','W','W',' ',) , 
@@ -76,6 +80,7 @@ class Test(unittest.TestCase):
                         (' ','W','W','W','W','W','W',' ',) )
   
         self.quadTable5 = QuadTable(self.board9, 8)
+        self.move5 = MoveAction(0, 2, Direction("SW", (1, -1)))
         self.state5 = LinesOfActionState(8, 50, self.board9, 6, 6)
 
         self.board10 = (   (' ', 'W', 'W', 'W', 'W', 'W', 'W', ' '),
@@ -88,8 +93,35 @@ class Test(unittest.TestCase):
                            (' ', 'W', 'W', 'W', 'W', 'W', 'W', ' '))
        
         self.quadTable6 = QuadTable(self.board10, 8)
-
+        self.spin6 = SpinAction(6, 0)
+        self.state6 = LinesOfActionState(8, 50, self.board10, 6, 6)
+        
+        self.board11 = (   (' ', 'W', 'W', 'W', 'W', 'W', 'W', ' '),
+                           ('B', ' ', ' ', ' ', ' ', ' ', ' ', 'B'),
+                           (' ', ' ', ' ', ' ', ' ', ' ', ' ', 'B'),
+                           (' ', 'B', 'B', ' ', ' ', ' ', ' ', 'B'),
+                           (' ', ' ', 'B', ' ', ' ', ' ', ' ', 'B'),
+                           ('B', ' ', ' ', ' ', ' ', ' ', ' ', 'B'),
+                           (' ', 'B', ' ', ' ', ' ', ' ', ' ', 'B'),
+                           ('W', ' ', 'W', 'W', 'W', 'W', 'W', ' '))
        
+        self.quadTable7 = QuadTable(self.board11, 8)
+        self.spin7 = SpinAction(3, 1)
+        self.state7 = LinesOfActionState(8, 50, self.board11, 6, 6)
+
+        self.board12 = (   (' ', 'W', 'W', 'W', 'W', 'W', 'W', ' '),
+                           ('B', ' ', ' ', ' ', ' ', ' ', ' ', 'B'),
+                           (' ', ' ', ' ', ' ', ' ', ' ', ' ', 'B'),
+                           (' ', ' ', 'B', ' ', ' ', ' ', ' ', 'B'),
+                           (' ', 'B', 'B', ' ', ' ', ' ', ' ', 'B'),
+                           ('B', ' ', ' ', ' ', ' ', ' ', ' ', 'B'),
+                           (' ', 'B', ' ', ' ', ' ', ' ', ' ', 'B'),
+                           ('W', ' ', 'W', 'W', 'W', 'W', 'W', ' '))
+       
+        self.quadTable8 = QuadTable(self.board12, 8)
+        self.state8 = LinesOfActionState(8, 50, self.board12, 6, 6)
+       
+
     def tearDown(self):
         pass
 
@@ -109,7 +141,6 @@ class Test(unittest.TestCase):
 
 
     def testQuadBoardInit(self):
-
         self.assertEqual('Q1', self.quadTable1.getQuadType(-1, -1, 'B'))
         self.assertEqual('Q0', self.quadTable1.getQuadType(0, 1, 'B'))
         self.assertEqual('Qd', self.quadTable1.getQuadType(1, 0, 'B'))
@@ -157,64 +188,58 @@ class Test(unittest.TestCase):
         self.assertEqual(count_types_b2['Q4'], 0)
         self.assertEqual(count_types_b2['Qd'], 0)
                     
+
     def testEulerNumber(self):
         self.assertEqual(3, self.quadTable2.eulerNumber('B'))
         self.assertEqual(1, self.quadTable2.eulerNumber('W'))
 
         
     def testCalcMoveDist(self):
-        move1 = MoveAction(3, 3, Direction("W", (0, -1)))
-        self.assertEqual(3, calcMoveDist(move1, self.quadTable2.board, self.quadTable2.size))
-        move2 = MoveAction(2, 4, Direction("SW", (1, -1)))   
-        self.assertEqual(4, calcMoveDist(move2, self.quadTable2.board, self.quadTable2.size))
-        move3 = MoveAction(6, 0, Direction("E", (0, 1)))
-        self.assertEqual(2, calcMoveDist(move3, self.quadTable3.board, self.quadTable3.size))
+        self.assertEqual(3, calcMoveDist(self.move1, self.quadTable2.board, self.quadTable2.size))
+        self.assertEqual(4, calcMoveDist(self.move2, self.quadTable2.board, self.quadTable2.size))
+        self.assertEqual(2, calcMoveDist(self.move3, self.quadTable3.board, self.quadTable3.size))
 
-    def testUpdate(self):
-        move1 = MoveAction(6, 0, Direction("E", (0, 1)))
-        u1 = self.quadTable3.update(self.state3, move1, self.state4)
-        move2 = MoveAction(0, 2, Direction("SW", (1, -1)))
-        u2 = self.quadTable4.update(self.state4, move2, self.state5)
-    
-#        print "Before update:"
-#        for x in range(-1, self.quadTable3.size):
-#            for y in range(-1, self.quadTable3.size):
-#                print self.quadTable3.black_quads[(x,y)], 
-#            print
-#        print
-#
-#        print "After update:"
-#        for x in range(-1, self.quadTable3.size):
-#            for y in range(-1, self.quadTable3.size):
-#                print u1.black_quads[(x,y)], 
-#            print
-#        print
-#        print "What it should be:"
-#        for x in range(-1, self.quadTable4.size):
-#            for y in range(-1, self.quadTable4.size):
-#                print self.quadTable4.black_quads[(x,y)], 
-#            print
-#        
+
+    def testMoveUpdate(self):
+        u1 = self.quadTable3.update(self.state3, self.move4, self.state4)
+        u2 = self.quadTable4.update(self.state4, self.move5, self.state5)
         
         self.assertNotEqual(self.quadTable3, u1)
         self.assertEqual(self.quadTable4, u1)
 
         self.assertNotEqual(self.quadTable4, u2)
         self.assertEqual(self.quadTable5, u2)
-  
-#        for x in range(-1, self.quadTable3.size):
-#            for y in range(-1, self.quadTable3.size):        
-#                self.assertEqual(self.quadTable4.black_quads[(x,y)], 
-#                    u1.black_quads[(x,y)])
-#                self.assertEqual(self.quadTable4.white_quads[(x,y)], 
-#                    u1.white_quads[(x,y)])
-                
-#        for x in range(-1, self.quadTable3.size):
-#            for y in range(-1, self.quadTable4.size):        
-#                self.assertEqual(self.quadTable5.black_quads[(x,y)], 
-#                    u2.black_quads[(x,y)])
-#                self.assertEqual(self.quadTable5.white_quads[(x,y)], 
-#                    u2.white_quads[(x,y)])
+
+
+    def testSpinUpdate(self):
+        u1 = self.quadTable6.update(self.state6, self.spin6, self.state7)
+        u2 = self.quadTable7.update(self.state7, self.spin7, self.state8)
+        
+        self.assertNotEqual(self.quadTable6, u1)
+        self.assertEqual(self.quadTable7, u1)
+
+        self.assertNotEqual(self.quadTable7, u2)
+        self.assertEqual(self.quadTable8, u2)
+        
+#        print "Before update:"
+#        for y in range(-1, self.quadTable4.size):
+#            for x in range(-1, self.quadTable4.size):
+#                print self.quadTable7.black_quads[(x,y)], 
+#            print
+#        print
+#
+#        print "After update:"
+#        for y in range(-1, self.quadTable4.size):
+#            for x in range(-1, self.quadTable4.size):
+#                print u2.black_quads[(x,y)], 
+#            print
+#        print
+#        print "What it should be:"
+#        for y in range(-1, self.quadTable5.size):
+#            for x in range(-1, self.quadTable5.size):
+#                print self.quadTable8.black_quads[(x,y)], 
+#            print
+        
 
 def count_types(quadTable, player):
     count_types = {'Q0':0, 'Q1':0, 'Q2':0, 'Q3':0, 'Q4':0, 'Qd':0}
