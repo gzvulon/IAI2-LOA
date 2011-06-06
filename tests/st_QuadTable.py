@@ -157,6 +157,7 @@ class Test(unittest.TestCase):
         self.assertEqual(count_types_b2['Q4'], 0)
         self.assertEqual(count_types_b2['Qd'], 0)
                     
+
     def testEulerNumber(self):
         self.assertEqual(3, self.quadTable2.eulerNumber('B'))
         self.assertEqual(1, self.quadTable2.eulerNumber('W'))
@@ -170,51 +171,19 @@ class Test(unittest.TestCase):
         move3 = MoveAction(6, 0, Direction("E", (0, 1)))
         self.assertEqual(2, calcMoveDist(move3, self.quadTable3.board, self.quadTable3.size))
 
+
     def testUpdate(self):
         move1 = MoveAction(6, 0, Direction("E", (0, 1)))
         u1 = self.quadTable3.update(self.state3, move1, self.state4)
         move2 = MoveAction(0, 2, Direction("SW", (1, -1)))
         u2 = self.quadTable4.update(self.state4, move2, self.state5)
-    
-#        print "Before update:"
-#        for x in range(-1, self.quadTable3.size):
-#            for y in range(-1, self.quadTable3.size):
-#                print self.quadTable3.black_quads[(x,y)], 
-#            print
-#        print
-#
-#        print "After update:"
-#        for x in range(-1, self.quadTable3.size):
-#            for y in range(-1, self.quadTable3.size):
-#                print u1.black_quads[(x,y)], 
-#            print
-#        print
-#        print "What it should be:"
-#        for x in range(-1, self.quadTable4.size):
-#            for y in range(-1, self.quadTable4.size):
-#                print self.quadTable4.black_quads[(x,y)], 
-#            print
-#        
         
         self.assertNotEqual(self.quadTable3, u1)
         self.assertEqual(self.quadTable4, u1)
 
         self.assertNotEqual(self.quadTable4, u2)
         self.assertEqual(self.quadTable5, u2)
-  
-#        for x in range(-1, self.quadTable3.size):
-#            for y in range(-1, self.quadTable3.size):        
-#                self.assertEqual(self.quadTable4.black_quads[(x,y)], 
-#                    u1.black_quads[(x,y)])
-#                self.assertEqual(self.quadTable4.white_quads[(x,y)], 
-#                    u1.white_quads[(x,y)])
-                
-#        for x in range(-1, self.quadTable3.size):
-#            for y in range(-1, self.quadTable4.size):        
-#                self.assertEqual(self.quadTable5.black_quads[(x,y)], 
-#                    u2.black_quads[(x,y)])
-#                self.assertEqual(self.quadTable5.white_quads[(x,y)], 
-#                    u2.white_quads[(x,y)])
+        
 
 def count_types(quadTable, player):
     count_types = {'Q0':0, 'Q1':0, 'Q2':0, 'Q3':0, 'Q4':0, 'Qd':0}
