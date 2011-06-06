@@ -6,6 +6,7 @@ from s_turn_cache import TurnCache, NoneTurnCache
 from loa_game import LinesOfActionState
 from s_end_timer import EndTimer
 from s_statistics import GTimeStatistics
+from s_common_ops import random_tag
 
 # A bloody large number.
 INFINITY = 1.0e400
@@ -111,11 +112,15 @@ class SmartAlphaBetaSearch:
         successors = self.turn_cache.get(state, LinesOfActionState.getSuccessors)
         # -- reordering --
         #ordered_successors = self.f_oreder(successors,depth,max_depth)
+        
         EndTimer.check(name="d2")
-       
-        GTimeStatistics.start_measure("_maxValue.successors.items() d:"    + str(depth))        
-        for action, successor_state in successors.items():
-            GTimeStatistics.stop_measure("_maxValue.successors.items() d:"    + str(depth))
+        str_key = "_maxValue.successors.items()  d:{0} tag{1}".format(depth,random_tag())
+        GTimeStatistics.start_measure(str_key)
+        successors_items = successors.items()
+        GTimeStatistics.stop_measure(str_key)
+        
+        for action, successor_state in successors_items:
+            
             EndTimer.check(name="d3")
            
             # update iterative info for son node
@@ -142,9 +147,12 @@ class SmartAlphaBetaSearch:
         
         # -- reordering --
         #ordered_successors = self.f_oreder(successors,depth,max_depth)
-        GTimeStatistics.start_measure("_minValue.successors.items() d:"    + str(depth))
-        for action, successor_state in successors.items():
-            GTimeStatistics.stop_measure("_minValue.successors.items() d:" + str(depth))
+        str_key = "_minValue.successors.items() d:{0} tag{1}".format(depth,random_tag())
+        GTimeStatistics.start_measure(str_key)
+        successors_items = successors.items()
+        GTimeStatistics.stop_measure(str_key)
+        
+        for action, successor_state in successors_items:
             EndTimer.check(name="g")
             # update iterative info for son node
             new_info_set = self._update_info_set(info_set, state, action, successor_state)
@@ -203,13 +211,17 @@ class SmartAlphaBetaSearch:
 
 class AnyTimeSmartAlphaBeta():
     '''The Main Shit'''
+    
+    def get_name(self):
+        return "AnyTimeSmartAlphaBeta"
+    
     def __init__(self, player, init_max_depth, 
                  utility, winner_check=SIMPLE_WINNER, 
                  depth_delta=1, caching =False):
         self.player = player
         self.init_max_depth = init_max_depth
         self.utility = utility
-        self.winner_check=winner_check
+        self.winner_check = winner_check
         self.rand = Random(0)
         self.depth_delta = depth_delta
         
@@ -219,7 +231,7 @@ class AnyTimeSmartAlphaBeta():
         
     def search(self, current_state, max_depth, time_limit):
         #init timer
-        safe_delta = 0.3
+        safe_delta = 0.08
         start_time = time.clock()
         end_time   = start_time + time_limit - safe_delta
         EndTimer.set(end_time)
@@ -232,19 +244,20 @@ class AnyTimeSmartAlphaBeta():
         index = self.rand.randint(0, len(succesors)-1)
         res_action, res_state = succesors.items()[index] 
         
-        #start iterative search
+        # start iterative search
         curr_max_depth = self.init_max_depth
-#       print "time left", end_time - time.clock(), "d=", curr_max_depth
+        # print "time left", end_time - time.clock(), "d=", curr_max_depth
         
         try:
             while time.clock() < end_time:
                 print  "time left", end_time - time.clock(), "d=", curr_max_depth
                 alg = SmartAlphaBetaSearch(self.player, self.utility, self.turn_cache, self.winner_check)
                 res_action,res_state = alg.search(current_state, curr_max_depth, end_time)
-                curr_max_depth +=self.depth_delta #TODO: TODO
+                curr_max_depth += self.depth_delta #TODO: TODO
         except TimeOutException: #TODO for release handle all exceptios
             pass
         
+        EndTimer.stop()
         return res_action,res_state     
         
         

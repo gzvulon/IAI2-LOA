@@ -1,4 +1,5 @@
 from loa_game import WHITE, BLACK, EMPTY
+import random
 
 def findDest(action, board, size):
     dist = calcMoveDist(action, board, size)
@@ -70,7 +71,10 @@ def other_player(player):
         return WHITE
     else:
         return EMPTY
-    
+
+def random_tag():
+    return  "b"# random.uniform(-1000000,1000000) 
 # --------------  Time -------------------------------
+
 
 #------------------------------------------------------    

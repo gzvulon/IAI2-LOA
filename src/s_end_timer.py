@@ -6,6 +6,8 @@ Created on Jun 3, 2011
 """
 import time
 import inspect
+from gc import disable as start_timer
+from gc import enable as end_timer
 
 def whosdaddy():
     return inspect.stack()[2][3]
@@ -28,7 +30,11 @@ class EndTimerClass():
     
     def set(self,end_time):
         self.end_time = end_time
-    
+        start_timer()
+        
+    def stop(self,end_time=None):
+        end_timer()
+            
     def check(self,safe_delta=0, name="not set"):
         if self.end_time == None: return
         self.save_name( name)

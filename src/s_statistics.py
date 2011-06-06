@@ -5,6 +5,7 @@ Created on Jun 4, 2011
 @author: inesmeya
 """
 import time
+import inspect
 INFINITY = 1.0e400
 
 class TimeStatisticsNone():
@@ -82,6 +83,9 @@ class TimeStatisticsClass():
     
     def __repr__(self):
         return self.__str__()
+
+
+class NodeStatisticsClass():
         
 GTimeStatistics = TimeStatisticsClass()    
     

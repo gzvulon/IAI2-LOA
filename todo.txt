@@ -24,6 +24,33 @@
 -------------------------------
 
 1. Time support[v]
-2. Any times
-3. State Chaching
+2. Any times [v]
+3. State Chaching  [v]
 4. Reordering
+
+
+Tests:
+Parameters:
+	1. Caching +/-
+	2. Iterative state calculations +/-
+	3. Reordering by:
+		our connected componets
+		enemy connected components
+	4. init depth
+	5. growing
+	6. 
+
+
+
+Results:
+	agents A,B:  N, 2N -> A wins: B wins
+	Nodes
+	
+	 
+
+
+
+
+
+
+
