@@ -67,7 +67,7 @@ class QuadTable():
 
 
     def update(self, state, action, newstate):
-        # Created a new quad table to be updated and returned.
+        # Create a new quad table to be updated and returned.
         cwq = copy(self.white_quads)
         cbq = copy(self.black_quads)
         newQuadTable = QuadTable(newstate.board, self.size, cwq, cbq, initialize = False)
@@ -76,14 +76,16 @@ class QuadTable():
         if isinstance(action, MoveAction):
             newQuadTable.movePiece(action, state)
         else: # is instance of SpinAction
-            newQuadTable.spin(action)
+            newQuadTable.spin(action, state)
 
         return newQuadTable
 
 
-    def spin(self):
-        pass
-
+    def spin(self, action, state):
+        for player in [WHITE, BLACK]:
+            for x in range(action.col-1, action.col+2):
+                for y in range(action.row-1, action.row+2):
+                    self.setQuadType(x, y, findQuadType(x, y, self.board, self.size, player), player)
 
     def movePiece(self, action, state):
         from_x = action.col
