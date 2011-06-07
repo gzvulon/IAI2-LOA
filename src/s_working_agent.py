@@ -11,13 +11,14 @@ from loa_game import LinesOfActionState, WHITE, BLACK
 from s_turn_cache import TurnCache, NoneTurnCache
 from random import Random
 from s_common_ops import other_player
+from s_weighted_evaluator import WeightedEvaluatorI
 
 class AnytimeSmartAlphaBetaPrintAgentParams(GameAgent):
     # ----------------------- Info API -------------------------------
     def get_name(self):
         return self.alphaBeta.get_name()
     
-    def myinit(self, caching, init_max_depth, depth_delta,  use_iterative):
+    def myinit(self, caching, init_max_depth, depth_delta,  use_iterative, evaluator):
         ''' 
         use string names names
         allow to confine agent'''
@@ -31,6 +32,7 @@ class AnytimeSmartAlphaBetaPrintAgentParams(GameAgent):
         
         #TODO:
         self.winner_check = QUAD_WINNER 
+        self.evaluator = evaluator
     
     # ---------------------- Timer ----------------------------------
     def start_timer(self):
@@ -70,47 +72,13 @@ class AnytimeSmartAlphaBetaPrintAgentParams(GameAgent):
  
      
     # ---------------------  The heuristics ------------------------------    
-
-    
     
     def utility(self, state, info_set):
-        GTimeStatistics.start_measure("heur")
-        
-        com_mine = CenterMassEvaluator().evaluate(state, self.player, info_set)
-        com_his = CenterMassEvaluator().evaluate(state, other_player(self.player), info_set)
-        euler_mine = info_set[QUAD_TABLE_TAG].eulerNumber(self.player)
-        euler_his = info_set[QUAD_TABLE_TAG].eulerNumber(other_player(self.player))
-        if com_mine >= wanted_mass:
-            weight = weight1
-        else: 
-            weight = weight2
-        
-        h_mine = (1 - weight) * com_mine + weight * euler_mine
-        h_his = (1 - weight) * com_his + weight * euler_his
-        h = (1 - enemy) * h_mine + enemy * h_his
-        
-        GTimeStatistics.stop_measure("heur")
-        return h
-    
-    def utility(self, state, info_set, wanted_mass, weight1, weight2, enemy):
-        GTimeStatistics.start_measure("heur")
-        
-        com_mine = CenterMassEvaluator().evaluate(state, self.player, info_set)
-        com_his = CenterMassEvaluator().evaluate(state, other_player(self.player), info_set)
-        euler_mine = info_set[QUAD_TABLE_TAG].eulerNumber(self.player)
-        euler_his = info_set[QUAD_TABLE_TAG].eulerNumber(other_player(self.player))
-        if com_mine >= wanted_mass:
-            weight = weight1
-        else: 
-            weight = weight2
-        
-        h_mine = (1 - weight) * com_mine + weight * euler_mine
-        h_his = (1 - weight) * com_his + weight * euler_his
-        h = (1 - enemy) * h_mine + enemy * h_his
-        
-        GTimeStatistics.stop_measure("heur")
-        return h
-            
+        GTimeStatistics.start_measure("agent.utility")
+        hv = self.evaluator.evaluate(state, self.player,info_set)
+        GTimeStatistics.stop_measure("agent.utility")
+        return hv
+               
     def info_print(self, game_state):
         pass
 #        print "The heuristics of game state"
@@ -142,6 +110,7 @@ class AnytimeSmartAlphaBetaPrintAgentParams(GameAgent):
         
         try:
             EndTimer.check("m10")
+            
             # calculate info set for this game_state
             if self.init_state is self.prev_state:
                 state_info_set = self.info_set #first turn is us: we already has infoset
@@ -174,14 +143,17 @@ class AnytimeSmartAlphaBetaPrintAgentParams(GameAgent):
         '''        
         # start iterative search
         curr_max_depth = init_max_depth
+        print init_max_depth
         # print "time left", end_time - time.clock(), "d=", curr_max_depth
+        alg = SmartAlphaBetaSearch(self.player, self.utility, self.turn_cache, self.winner_check, self.use_quads)
         
         while True:
             EndTimer.check("start search")
-            print  "time left", EndTimer.time_left(), "d=", curr_max_depth
-            alg = SmartAlphaBetaSearch(self.player, self.utility, self.turn_cache, self.winner_check,self.use_quads)
-            self.res_action, self.res_state, self.res_info_set = alg.search(current_state, curr_max_depth, info_set)
-            curr_max_depth += self.depth_delta #TODO: TODO
+            r = alg.search(current_state, curr_max_depth, info_set)
+            self.res_action, self.res_state, self.res_info_set = r
+            print "Solution at depth:", curr_max_depth, "  time left:", EndTimer.time_left()
+            curr_max_depth += self.depth_delta 
+            
         
         
 

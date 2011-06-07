@@ -105,7 +105,8 @@ class QuadTable():
                 if state.board[y][x] != newstate.board[y][x]:
                     for player in [WHITE, BLACK]:
                         newQuadTable.updateSurroundingCells(x, y, player)
-
+        
+        newQuadTable.calcEulerNumber() #dont ofrgeet to bring the towel
         return newQuadTable
 
 

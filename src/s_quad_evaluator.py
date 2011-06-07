@@ -5,7 +5,7 @@ Created on Jun 7, 2011
 '''
 from s_enums import QUAD_TABLE_TAG
 
-class quadHeuristic():
+class QuadEvaluator():
     
     def evaluate(self, state, player, info_set):
         

@@ -52,7 +52,7 @@ class Statistics():
         return res
     
     def __str__(self):
-        return str(self.stats) + str(self.hit_rate())
+        return  str(self.hit_rate())
     
     def __repr__(self):
         return self.__str__()
@@ -147,7 +147,6 @@ class TurnCache():
                 k = (w+1, i)
                 if d.has_key(k):
                     del d[k]
-
             
     def _get_turn_info(self,current_state):
         checkers_left = (current_state.whites, current_state.blacks)
