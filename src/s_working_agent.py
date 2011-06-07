@@ -1,17 +1,12 @@
-from s_heuristics import winner_heuristics
 from game_agent import GameAgent
-from s_eval_mass import CenterMassEvaluator
 from s_alpha_beta import  SmartAlphaBetaSearch
 from s_statistics import GTimeStatistics
-from s_enums import QUAD_TABLE_TAG, ITERATIVE, NON_ITERATIVE, SIMPLE_WINNER,\
-    QUAD_WINNER
+from s_enums import QUAD_TABLE_TAG, ITERATIVE, NON_ITERATIVE, QUAD_WINNER
 from s_quad_table import QuadTable, QuadTableNoUpdate
 from s_end_timer import EndTimer, TimeOutException
-from loa_game import LinesOfActionState, WHITE, BLACK
+from loa_game import LinesOfActionState
 from s_turn_cache import TurnCache, NoneTurnCache
 from random import Random
-from s_common_ops import other_player
-from s_weighted_evaluator import WeightedEvaluatorI
 
 class AnytimeSmartAlphaBetaPrintAgentParams(GameAgent):
     # ----------------------- Info API -------------------------------
