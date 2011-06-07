@@ -51,7 +51,7 @@ class AnytimeSmartAlphaBetaPrintAgentParams(GameAgent):
         self.prev_state = game_state
         
         #save params
-        self.safe_delta = 0.085
+        self.safe_delta = 0.25
         self.corrected_turn_time_limit = turn_time_limit - self.safe_delta
         self.player = player
 
@@ -131,8 +131,12 @@ class AnytimeSmartAlphaBetaPrintAgentParams(GameAgent):
             pass
         
         # save data about our move
+
         self.prev_state = self.res_state
         self.info_set   = self.res_info_set 
+        self.stop_timer()
+        u_res = self.turn_cache.get(self.res_state, self.utility, self.res_info_set)
+        print u_res
         return self.res_action
     
     # --------------------------- search algorithm ------------------------
