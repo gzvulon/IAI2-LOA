@@ -9,7 +9,8 @@ from s_statistics import GTimeStatistics
 from s_common_ops import random_tag
 from s_quad_table import QuadTable
 import s_quad_table
-from s_enums import QUAD_TABLE_TAG, SIMPLE_WINNER, QUAD_WINNER, INFINITY
+from s_enums import QUAD_TABLE_TAG, SIMPLE_WINNER, QUAD_WINNER, INFINITY,\
+    DONT_USE_QUADS
 
 
 
@@ -21,7 +22,7 @@ class SmartAlphaBetaSearch:
     search by depth alone and uses an evaluation function (utility).
     '''
     
-    def __init__(self, player, utility, turn_cache, winner_check=SIMPLE_WINNER):
+    def __init__(self, player, utility, turn_cache, winner_check=SIMPLE_WINNER, use_quads=DONT_USE_QUADS):
         '''
         Constructor.
         
@@ -36,12 +37,13 @@ class SmartAlphaBetaSearch:
         self.utility = utility
         #self.info_
         
-        self.f_checkWinner = { 
-            SIMPLE_WINNER: self._checkWinnerSimple,
-            QUAD_WINNER:   self._checkWinnerEuler,
-        }[winner_check]
+        if winner_check==QUAD_WINNER:
+            self.f_checkWinner = self._checkWinnerEuler
+            #reordering
+        else:
+            self.f_checkWinner = self._checkWinnerSimple
+            #
         
-
     
     def search(self, current_state, max_depth, info_set):
         '''
@@ -75,10 +77,9 @@ class SmartAlphaBetaSearch:
             
             if value > best_value:
                 best_value = value
-                best_action = action
-                best_state  = newstate
+                best = (action,newstate,new_info_set)
         
-        return best_action, best_state
+        return best
     
     
     def _need_return(self,state, depth, max_depth,info_set):
@@ -89,7 +90,7 @@ class SmartAlphaBetaSearch:
         '''
         EndTimer.check("_need_return1")
         # check if node is terminate
-        w = self.f_checkWinner(state)
+        w = self.f_checkWinner(state,info_set)
         # if it is : return its value (-1 for enemy, +1 for us)
         if w != 0:
             return True,w
@@ -97,7 +98,7 @@ class SmartAlphaBetaSearch:
         EndTimer.check("_need_return2")
         # if reached depth limit: evaluate node using heuristics
         if depth >= max_depth:
-            u_res = self.turn_cache.get(state, self.utility)
+            u_res = self.turn_cache.get(state, self.utility, info_set)
             return True, u_res# self.utility(state) # new_info_set        
         
         return False,0

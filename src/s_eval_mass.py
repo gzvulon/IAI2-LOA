@@ -9,6 +9,7 @@ from loa_game import WHITE, BLACK, EMPTY
 import sys
 from s_end_timer import EndTimer
 from s_statistics import TimeStatisticsClass, GTimeStatistics
+from s_enums import QUAD_TABLE_TAG
 
 
 def initialize(board):
@@ -158,11 +159,14 @@ class CenterMassEvaluator(Evaluator):
         
         return r1, r2
         
-    def evaluate(self, state, player, action =None, quad_table_ext=None):
+    def evaluate(self, state, player, info_set=None, action =None, ):
         '''
         @type state: loa_game.LinesOfActionState
         '''
-        r1, r2 = self.evaluate2(state, player, action, quad_table_ext)
+        if not info_set is None:
+            quad_table =info_set[QUAD_TABLE_TAG]
+        
+        r1, r2 = self.evaluate2(state, player, action, info_set)
         return r1 + r2
           
         # calculate center of mass
