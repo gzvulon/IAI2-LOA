@@ -88,5 +88,43 @@ class TimeStatisticsClass():
 class NodeStatisticsClass():
     pass
         
-GTimeStatistics = TimeStatisticsClass()    
+GTimeStatistics = TimeStatisticsClass()
+
+
+
+
+
+
+# ============================ Visiting statistics ============================
+
+
+class DepthUnit():
     
+    def __init__(self,maxdepth):
+        self.maxdepth = maxdepth
+        self.start = time.clock()
+        self.count = 0
+        
+    def add_one(self):
+        self.count
+    
+    def finish(self):
+    
+
+
+class VisitsStatistics():
+    
+    def __init__(self):
+        self.stats = {}
+        
+    def start_monitor(self, tag, maxdepth):
+        self.stats[maxdepth] = 3
+        pass
+    
+    def visit_node(self, tag):
+        self.stats[tag] += 1
+        
+    def stop_monitor(self, tag, maxdepth):
+        self.stats[tag] += 1
+        
+        

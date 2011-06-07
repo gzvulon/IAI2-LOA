@@ -10,15 +10,13 @@ from s_end_timer import EndTimer, TimeOutException
 from loa_game import LinesOfActionState, WHITE, BLACK
 from s_turn_cache import TurnCache, NoneTurnCache
 from random import Random
-from s_common_ops import other_player
-from s_weighted_evaluator import WeightedEvaluatorI
 
-class AnytimeSmartAlphaBetaPrintAgentParams(GameAgent):
+class AnytimeSmartAlphaBetaPrintAgentParamsOld(GameAgent):
     # ----------------------- Info API -------------------------------
     def get_name(self):
         return self.alphaBeta.get_name()
     
-    def myinit(self, caching, init_max_depth, depth_delta,  use_iterative, evaluator):
+    def myinit(self, caching, init_max_depth, depth_delta,  use_iterative):
         ''' 
         use string names names
         allow to confine agent'''
@@ -32,7 +30,6 @@ class AnytimeSmartAlphaBetaPrintAgentParams(GameAgent):
         
         #TODO:
         self.winner_check = QUAD_WINNER 
-        self.evaluator = evaluator
     
     # ---------------------- Timer ----------------------------------
     def start_timer(self):
@@ -54,6 +51,9 @@ class AnytimeSmartAlphaBetaPrintAgentParams(GameAgent):
         self.safe_delta = 0.085
         self.corrected_turn_time_limit = turn_time_limit - self.safe_delta
         self.player = player
+        
+        # choose evaluator
+        self.evaluator = CenterMassEvaluator()
 
         #TODO: check set_uptime
         
@@ -69,17 +69,16 @@ class AnytimeSmartAlphaBetaPrintAgentParams(GameAgent):
         if self.caching: self.turn_cache = TurnCache()
         else:       self.turn_cache = NoneTurnCache()
 
- 
+        
      
     # ---------------------  The heuristics ------------------------------    
+    def utility(self,state,info_set):
+        GTimeStatistics.start_measure("heur")
+        r = self.evaluator.evaluate(state, self.player,info_set)
+        GTimeStatistics.stop_measure("heur")
+        return r
     
-    def utility(self, state, info_set):
-        GTimeStatistics.start_measure("agent.utility")
-        hv = self.evaluator.evaluate(state, self.player,info_set)
-        GTimeStatistics.stop_measure("agent.utility")
-        return hv
-               
-    def info_print(self, game_state):
+    def info_print(self,game_state):
         pass
 #        print "The heuristics of game state"
 #        print game_state
@@ -92,7 +91,7 @@ class AnytimeSmartAlphaBetaPrintAgentParams(GameAgent):
         for info_tag, info_table in info_set.items():
             new_info_set[info_tag] = self.turn_cache.get_wkt(newstate, # use cache
                  info_tag, info_tag + '.update_no_action', 
-                 lambda: info_table.updateWithoutAction(oldstate, newstate) )
+                 lambda: info_table.updateWithoutAction(oldstate, newstate)                 )
         return new_info_set 
     
     
@@ -107,10 +106,10 @@ class AnytimeSmartAlphaBetaPrintAgentParams(GameAgent):
     def move(self, game_state):
         self.start_timer()
         self.res_action, self.res_state = self.choose_default_answer(game_state)
-        
+        print "w=",CenterMassEvaluator().evaluate(game_state,WHITE)
+        print "b=",CenterMassEvaluator().evaluate(game_state,BLACK)
         try:
             EndTimer.check("m10")
-            
             # calculate info set for this game_state
             if self.init_state is self.prev_state:
                 state_info_set = self.info_set #first turn is us: we already has infoset
@@ -143,19 +142,15 @@ class AnytimeSmartAlphaBetaPrintAgentParams(GameAgent):
         '''        
         # start iterative search
         curr_max_depth = init_max_depth
-        print init_max_depth
         # print "time left", end_time - time.clock(), "d=", curr_max_depth
-        alg = SmartAlphaBetaSearch(self.player, self.utility, self.turn_cache, self.winner_check, self.use_quads)
         
         while True:
             EndTimer.check("start search")
-            r = alg.search(current_state, curr_max_depth, info_set)
-            self.res_action, self.res_state, self.res_info_set = r
-            print "Solution at depth:", curr_max_depth, "  time left:", EndTimer.time_left()
-            curr_max_depth += self.depth_delta 
-            
+            print  "time left", EndTimer.time_left(), "d=", curr_max_depth
+            alg = SmartAlphaBetaSearch(self.player, self.utility, self.turn_cache, self.winner_check,self.use_quads)
+            self.res_action, self.res_state, self.res_info_set = alg.search(current_state, curr_max_depth, info_set)
+            curr_max_depth += self.depth_delta #TODO: TODO
         
         
-
-                   
+                
         
