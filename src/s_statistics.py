@@ -42,8 +42,8 @@ class MeasureUnitBase():
         
 
     def __str__(self):
-        return "avg={0}, max={1}, min={2}, times={3}\n".format(
-            self.average, self.max, self.min, self.times)
+        return "avg={%s}, max={%s}, min={%s}, times={%s}\n" % \
+            (self.average, self.max, self.min, self.times)
     
     def __repr__(self):
         return self.__str__()

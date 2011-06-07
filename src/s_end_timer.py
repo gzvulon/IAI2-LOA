@@ -8,6 +8,7 @@ import time
 import inspect
 from gc import disable as start_timer
 from gc import enable as end_timer
+from alpha_beta import INFINITY
 
 def whosdaddy():
     return inspect.stack()[2][3]
@@ -40,7 +41,7 @@ class EndTimerClass():
         start_timer()
         
     def stop(self,end_time=None):
-        end_timer()
+        self.end_time = None
             
     def check(self,name="not set",safe_delta=0):
         if self.end_time == None: return
