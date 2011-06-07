@@ -118,7 +118,7 @@ class SmartAlphaBetaSearch:
         #ordered_successors = self.f_oreder(successors,depth,max_depth)
         
         EndTimer.check(name="d2")
-        str_key = "_maxValue.successors.items()  d:{0} tag{1}".format(depth,random_tag())
+        str_key = "_maxValue.successors.items()  d:{%s} tag{1%s}" % (depth,random_tag())
         GTimeStatistics.start_measure(str_key)
         successors_items = successors.items()
         GTimeStatistics.stop_measure(str_key)
@@ -151,7 +151,7 @@ class SmartAlphaBetaSearch:
         
         # -- reordering --
         #ordered_successors = self.f_oreder(successors,depth,max_depth)
-        str_key = "_minValue.successors.items() d:{0} tag{1}".format(depth,random_tag())
+        str_key = "_minValue.successors.items() d:{%s} tag{%s}" % (depth,random_tag())
         GTimeStatistics.start_measure(str_key)
         successors_items = successors.items()
         GTimeStatistics.stop_measure(str_key)

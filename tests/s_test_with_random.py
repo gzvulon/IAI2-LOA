@@ -50,7 +50,7 @@ agents[ BLACK ] = a1
 state = LinesOfActionState(6, 40)
 
 try:
-    winner = GameRunner(state, agents, 20.5 , 1).run()
+    winner = GameRunner(state, agents, 3.0 , 1).run()
     print 'Winner:', winner
 
 except Exception, e:
