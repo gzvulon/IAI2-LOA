@@ -3,7 +3,8 @@ from game_agent import GameAgent
 from s_eval_mass import CenterMassEvaluator
 from s_alpha_beta import  SmartAlphaBetaSearch
 from s_statistics import GTimeStatistics
-from s_enums import QUAD_TABLE_TAG, ITERATIVE, NON_ITERATIVE, SIMPLE_WINNER
+from s_enums import QUAD_TABLE_TAG, ITERATIVE, NON_ITERATIVE, SIMPLE_WINNER,\
+    QUAD_WINNER
 from s_quad_table import QuadTable, QuadTableNoUpdate
 from s_end_timer import EndTimer, TimeOutException
 from loa_game import LinesOfActionState
@@ -28,7 +29,7 @@ class AnytimeSmartAlphaBetaPrintAgentParams(GameAgent):
         self.use_quads = False
         
         #TODO:
-        self.winner_check = SIMPLE_WINNER 
+        self.winner_check = QUAD_WINNER 
     
     # ---------------------- Timer ----------------------------------
     def start_timer(self):

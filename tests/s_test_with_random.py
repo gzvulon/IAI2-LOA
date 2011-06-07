@@ -10,14 +10,14 @@ from s_agents import  DummyAgent, RandomAgent
 from loa_game import WHITE, BLACK, LinesOfActionState
 from game_runner import GameRunner
 from alpha_beta import INFINITY
-from s_working_agent import AnytimeSmartAlphaBetaPrintAgentParams
 from s_statistics import GTimeStatistics
 from s_end_timer import EndTimer
-from s_enums import ITERATIVE
+from s_enums import ITERATIVE, NON_ITERATIVE
+from s_old_agent import AnytimeSmartAlphaBetaPrintAgentParamsOld
 
 
 agents = {}
-a1 = AnytimeSmartAlphaBetaPrintAgentParams()
+a1 = AnytimeSmartAlphaBetaPrintAgentParamsOld()
 a1_params = {
   'caching':True,
   'init_max_depth': 3,
@@ -25,12 +25,12 @@ a1_params = {
   'use_iterative' : ITERATIVE           
 }
 
-a2 = AnytimeSmartAlphaBetaPrintAgentParams()
+a2 = AnytimeSmartAlphaBetaPrintAgentParamsOld()
 a2_params = {
   'caching':False,
   'init_max_depth': 3,
   'depth_delta':1,
-  'use_iterative' : ITERATIVE 
+  'use_iterative' : NON_ITERATIVE 
             
 }
 
@@ -45,7 +45,7 @@ agents[ BLACK ] = a1
 state = LinesOfActionState(6, 20)
 
 #try:
-winner = GameRunner(state, agents, 5.5 , 1).run()
+winner = GameRunner(state, agents, 1.5 , 1).run()
 print 'Winner:', winner
 
 #except Exception as e:

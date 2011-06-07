@@ -155,8 +155,8 @@ def update(target_state, old_q_table, old_state, action):
     
 
 class QuadTableNoUpdate(QuadTable):
-    def __init__(self, *args):
-        super(QuadTable,self).init(*args)
+    def __init__(self, *args, **kwds):
+        QuadTable.__init__(self, *args, **kwds)
     
     def update(self, state, newstate, action):
         return QuadTableNoUpdate(state.board, state.size, initialize=True)
