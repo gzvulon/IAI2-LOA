@@ -109,7 +109,7 @@ class DepthUnit():
         self.count
     
     def finish(self):
-    
+        pass
 
 
 class VisitsStatistics():

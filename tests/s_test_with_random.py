@@ -53,7 +53,7 @@ try:
     winner = GameRunner(state, agents, 20.5 , 1).run()
     print 'Winner:', winner
 
-except Exception as e:
+except Exception, e:
     print e
     raise
 finally:    
