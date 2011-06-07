@@ -7,9 +7,10 @@ from s_enums import QUAD_TABLE_TAG, ITERATIVE, NON_ITERATIVE, SIMPLE_WINNER,\
     QUAD_WINNER
 from s_quad_table import QuadTable, QuadTableNoUpdate
 from s_end_timer import EndTimer, TimeOutException
-from loa_game import LinesOfActionState
+from loa_game import LinesOfActionState, WHITE, BLACK
 from s_turn_cache import TurnCache, NoneTurnCache
 from random import Random
+from s_common_ops import other_player
 
 class AnytimeSmartAlphaBetaPrintAgentParams(GameAgent):
     # ----------------------- Info API -------------------------------
@@ -51,9 +52,6 @@ class AnytimeSmartAlphaBetaPrintAgentParams(GameAgent):
         self.safe_delta = 0.085
         self.corrected_turn_time_limit = turn_time_limit - self.safe_delta
         self.player = player
-        
-        # choose evaluator
-        self.evaluator = CenterMassEvaluator()
 
         #TODO: check set_uptime
         
@@ -69,16 +67,31 @@ class AnytimeSmartAlphaBetaPrintAgentParams(GameAgent):
         if self.caching: self.turn_cache = TurnCache()
         else:       self.turn_cache = NoneTurnCache()
 
-        
+ 
      
     # ---------------------  The heuristics ------------------------------    
-    def utility(self,state,info_set):
+
+    def utility(self, state, info_set, wanted_mass, weight1, weight2, enemy):
         GTimeStatistics.start_measure("heur")
-        r = self.evaluator.evaluate(state, self.player,info_set)
+        
+        com_mine = CenterMassEvaluator().evaluate(state, self.player, info_set)
+        com_his = CenterMassEvaluator().evaluate(state, other_player(self.player), info_set)
+        euler_mine = info_set[QUAD_TABLE_TAG].eulerNumber(self.player)
+        euler_his = info_set[QUAD_TABLE_TAG].eulerNumber(other_player(self.player))
+        if com_mine >= wanted_mass:
+            weight = weight1
+        else: 
+            weight = weight2
+        
+        h_mine = (1 - weight) * com_mine + weight * euler_mine
+        h_his = (1 - weight) * com_his + weight * euler_his
+        h = (1 - enemy) * h_mine + enemy * h_his
+        
         GTimeStatistics.stop_measure("heur")
-        return r
-    
-    def info_print(self,game_state):
+        return h
+
+            
+    def info_print(self, game_state):
         pass
 #        print "The heuristics of game state"
 #        print game_state
