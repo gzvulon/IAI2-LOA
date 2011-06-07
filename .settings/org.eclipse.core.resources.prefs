@@ -1,4 +1,4 @@
-#Tue Jun 07 02:47:39 IDT 2011
+#Tue Jun 07 03:51:27 IDT 2011
 eclipse.preferences.version=1
 encoding//src/s_agents.py=utf-8
 encoding//src/s_agents_itest.py=utf-8
@@ -10,6 +10,7 @@ encoding//src/s_heuristics.py=utf-8
 encoding//src/s_statistics.py=utf-8
 encoding//src/s_tc_first.py=utf-8
 encoding//src/s_turn_cache.py=utf-8
+encoding//src/s_weighted_evaluator.py=utf-8
 encoding//tests/s_test_simple_interactive.py=utf-8
 encoding//tests/s_test_with_random.py=utf-8
 encoding//tests/st_cm_values.py=utf-8

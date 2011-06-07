@@ -71,6 +71,27 @@ class AnytimeSmartAlphaBetaPrintAgentParams(GameAgent):
      
     # ---------------------  The heuristics ------------------------------    
 
+    
+    
+    def utility(self, state, info_set):
+        GTimeStatistics.start_measure("heur")
+        
+        com_mine = CenterMassEvaluator().evaluate(state, self.player, info_set)
+        com_his = CenterMassEvaluator().evaluate(state, other_player(self.player), info_set)
+        euler_mine = info_set[QUAD_TABLE_TAG].eulerNumber(self.player)
+        euler_his = info_set[QUAD_TABLE_TAG].eulerNumber(other_player(self.player))
+        if com_mine >= wanted_mass:
+            weight = weight1
+        else: 
+            weight = weight2
+        
+        h_mine = (1 - weight) * com_mine + weight * euler_mine
+        h_his = (1 - weight) * com_his + weight * euler_his
+        h = (1 - enemy) * h_mine + enemy * h_his
+        
+        GTimeStatistics.stop_measure("heur")
+        return h
+    
     def utility(self, state, info_set, wanted_mass, weight1, weight2, enemy):
         GTimeStatistics.start_measure("heur")
         
@@ -89,7 +110,6 @@ class AnytimeSmartAlphaBetaPrintAgentParams(GameAgent):
         
         GTimeStatistics.stop_measure("heur")
         return h
-
             
     def info_print(self, game_state):
         pass
@@ -164,5 +184,6 @@ class AnytimeSmartAlphaBetaPrintAgentParams(GameAgent):
             curr_max_depth += self.depth_delta #TODO: TODO
         
         
-                
+
+                   
         
