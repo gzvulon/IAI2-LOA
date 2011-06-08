@@ -39,6 +39,6 @@ def run_game(agent_class1, params1, agent_class2, params2, game_params, test_nam
             print "Player ", p
             print a   
 
-def run_game_pare(agent_class1, params1, agent_class2, params2, game_params, test_name):
+def run_game_pair(agent_class1, params1, agent_class2, params2, game_params, test_name):
     run_game(agent_class1, params1, agent_class2, params2, game_params, test_name)
     run_game(agent_class2, params2, agent_class1, params1, game_params, test_name)
