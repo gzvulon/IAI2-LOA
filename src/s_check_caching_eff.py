@@ -20,7 +20,7 @@ def main():
     a2_params = {
       'caching':False,
       'init_max_depth': 2,
-      'depth_delta':1,
+      'depth_delta':100,
       'use_iterative' : ITERATIVE,
       'evaluator' : WeightedEvaluatorH(0.3, 0.0, 0.05, 0.25)
     }
