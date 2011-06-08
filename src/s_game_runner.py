@@ -12,6 +12,7 @@ from s_working_agent import AnytimeSmartAlphaBetaPrintAgentParams
 class  GameTester():
     def __init__(self, name):
         self.name = name
+        self.games_stat =[]
 
 
     def run_game(self,agent_class1, params1, agent_class2, params2, game_params):
@@ -45,6 +46,7 @@ class  GameTester():
                 print "Player ", p
                 print a
         # Statistics
+        res = (game_params,agent1,agent2)
            
     
     def run_game_pair(self, agent_class1, params1, agent_class2, params2, game_params):
