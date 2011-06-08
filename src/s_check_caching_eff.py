@@ -20,7 +20,7 @@ def main():
     a2_params = {
       'caching':False,
       'init_max_depth': 2,
-      'depth_delta':100,
+      'depth_delta':1,
       'use_iterative' : ITERATIVE,
       'evaluator' : WeightedEvaluatorH(0.3, 0.0, 0.05, 0.25)
     }
@@ -32,7 +32,7 @@ def main():
             'size' : 10,
             'turns_left' : turns,
         
-            'turn_time_limit' : 20.0,
+            'turn_time_limit' : 50.0,
             'setup_time_limit' : 5.0
         }
         tester.run_game_pair(a1,a1_params,a2,a2_params,game_params)
