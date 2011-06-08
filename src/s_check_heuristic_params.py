@@ -6,14 +6,15 @@ from random import Random
 from s_agents import RandomAgent
 
 def main():
-    
+    tester = GameTester("Heuristic Params")
     rand = Random()
-
-    game_params_arr = []
-    for i in range(0,20):
+    NUMBER_OF_GAME_PAIRS = 20
+    
+    game_params_arr = [None]*NUMBER_OF_GAME_PAIRS
+    for i in range(0,NUMBER_OF_GAME_PAIRS):
         board_size = rand.randint(5,15)
         turns = rand.randint(10,70)
-        turn_time_limit = rand.randint(0.1,12)
+        turn_time_limit = rand.uniform(0.5,12.0)
         
         game_params_arr[i] = {
             'size' : board_size,
@@ -31,40 +32,37 @@ def main():
       'evaluator' : WeightedEvaluatorH(0.3, 0.0, 0.05, 0.25)
                 
     }
-    a1 = AnytimeSmartAlphaBetaPrintAgentParams
 
     a2_params = {
-      'caching':False,
+      'caching':True,
       'init_max_depth': 2,
       'depth_delta':1,
       'use_iterative' : ITERATIVE,
       'evaluator' : WeightedEvaluatorH(0.3, 0.0, 0.05, 0.0)
                 
     }
-    a2 = AnytimeSmartAlphaBetaPrintAgentParams
     
     a3_params = {
-      'caching':False,
+      'caching':True,
       'init_max_depth': 2,
       'depth_delta':1,
       'use_iterative' : ITERATIVE,
       'evaluator' : WeightedEvaluatorH(0.4, 0.05, 0.1, 0.0)
                 
     }
-    a3 = AnytimeSmartAlphaBetaPrintAgentParams
     
+    a  = AnytimeSmartAlphaBetaPrintAgentParams
     ar = RandomAgent
     
-    tester = GameTester("Heuristic Params")
     for _ in range(0,50):
-        tester.run_game_pair(a1,a1_params,ar,{},game_params_arr[rand.randint(0,10)])
+        tester.run_game_pair(a,a1_params,ar,{},game_params_arr[rand.randint(0,10)])
         
     for _ in range(0,50):
-        tester.run_game_pair(a2,a2_params,ar,{},game_params_arr[rand.randint(0,10)])
+        tester.run_game_pair(a,a2_params,ar,{},game_params_arr[rand.randint(0,10)])
     
 
     for _ in range(0,50):
-        tester.run_game_pair(a3,a3_params,ar,{},game_params_arr[rand.randint(0,10)])
+        tester.run_game_pair(a,a3_params,ar,{},game_params_arr[rand.randint(0,10)])
     # number of wins    
     
 

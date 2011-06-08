@@ -4,6 +4,8 @@ from s_working_agent import AnytimeSmartAlphaBetaPrintAgentParams
 from s_game_runner import GameTester
 
 def main():
+    tester = GameTester("Caching Effectiveness")
+    
     a1_params = {
       'caching':True,
       'init_max_depth': 2,
@@ -22,7 +24,7 @@ def main():
     }
     a2 = AnytimeSmartAlphaBetaPrintAgentParams
     
-    tester = GameTester("Caching Effectiveness")
+    
     for turns in [20,60,100]:
         game_params = {
             'size' : 10,

@@ -1,8 +1,9 @@
-#Wed Jun 08 12:58:34 IDT 2011
+#Wed Jun 08 15:53:14 IDT 2011
 eclipse.preferences.version=1
-encoding//checks/s_caching_eff.py=utf-8
 encoding//src/s_agents.py=utf-8
 encoding//src/s_agents_itest.py=utf-8
+encoding//src/s_check_caching_eff.py=utf-8
+encoding//src/s_check_games_generator.py=utf-8
 encoding//src/s_end_timer.py=utf-8
 encoding//src/s_enums.py=utf-8
 encoding//src/s_eval_mass.py=utf-8
