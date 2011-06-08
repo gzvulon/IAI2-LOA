@@ -12,8 +12,8 @@ def main():
     game_params_arr = []
     for i in range(0,20):
         board_size = rand.randint(5,15)
-        turns = rand.randint(10,100)
-        turn_time_limit = rand.randint(0.1,20)
+        turns = rand.randint(10,80)
+        turn_time_limit = rand.randint(0.1,15)
         
         game_params_arr[i] = {
             'size' : board_size,
@@ -64,8 +64,7 @@ def main():
     
     for _ in range(0,100):
         tester.run_game_pair(a3,a3_params,ar,{},game_params_arr[rand.randint(0,20)])
-    
-    
+    # number of wins
 
 # -------------------End of -------------------------
 if __name__ == '__main__':

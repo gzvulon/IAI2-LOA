@@ -36,7 +36,8 @@ def main():
             'setup_time_limit' : 5.0
         }
         tester.run_game_pair(a1,a1_params,a2,a2_params,game_params)
-    
+        # check hit rate
+        # number of node / times
 
 # -------------------End of -------------------------
 if __name__ == '__main__':
