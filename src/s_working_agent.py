@@ -8,6 +8,8 @@ from s_end_timer import EndTimer, TimeOutException
 from loa_game import LinesOfActionState
 from s_turn_cache import TurnCache, NoneTurnCache
 from random import Random
+from s_eval_mass import CenterMassEvaluator
+from s_quad_evaluator import QuadEvaluator
 
 class AnytimeSmartAlphaBetaPrintAgentParams(GameAgent):
     # ----------------------- Info API -------------------------------
@@ -140,9 +142,9 @@ class AnytimeSmartAlphaBetaPrintAgentParams(GameAgent):
         self.prev_state = self.res_state
         self.info_set   = self.res_info_set 
         self.stop_timer()
+#        print "cm", CenterMassEvaluator().evaluate(self.res_state, self.player, self.res_info_set)
+#        print "e", QuadEvaluator().evaluate(self.res_state, self.player, self.res_info_set)
         
-        u_res = self.turn_cache.get(self.res_state, self.utility, self.res_info_set)
-        print u_res
         return self.res_action
     
     # --------------------------- search algorithm ------------------------

@@ -75,5 +75,5 @@ class WeightedEvaluatorI():
         h_mine = apply_weight(weight,euler_mine, com_mine)
         h_his =  apply_weight(weight,1-euler_his, com_his)
         
-        h = (1 - self.weight_enemy) * h_mine - self.weight_enemy * h_his
+        h = h_mine - self.weight_enemy * h_his
         return h 

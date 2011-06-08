@@ -24,7 +24,7 @@ a2_params = {
   'init_max_depth': 2,
   'depth_delta':1,
   'use_iterative' : ITERATIVE,
-  'evaluator' : WeightedEvaluatorH(0.55, 0.3, 0.7, 0.25)
+  'evaluator' : WeightedEvaluatorH(0.3, 0.0, 0.05, 0.25)
 }
 
 a1.myinit(**a1_params)
@@ -34,7 +34,7 @@ agents[ WHITE ] = a1
 agents[ BLACK ] = a2
 
 for size in [50, 80]:
-    state = LinesOfActionState(15, size)
+    state = LinesOfActionState(12, size)
     
     try:
         winner = GameRunner(state, agents, 3.0 , 1).run()

@@ -40,15 +40,15 @@ a3_params = {
   'init_max_depth': 2,
   'depth_delta':1,
   'use_iterative' : ITERATIVE,
-  'evaluator' : WeightedEvaluatorH(0.75, 0.3, 0.7, 0.25)
+  'evaluator' : WeightedEvaluatorH(0.3, 0.0, 0.01, 0.25)
             
 }
 
 game_params = {
-    'size' : 8,
-    'turns_left' : 4,
+    'size' : 10,
+    'turns_left' : 50,
 
-    'turn_time_limit' : 10.0,
+    'turn_time_limit' : 3.0,
     'setup_time_limit' : 1.0
 }
 
