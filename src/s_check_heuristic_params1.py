@@ -25,8 +25,8 @@ def main():
     for game_params in game_params_arr:
         tester.run_game_pair(a,a1_params,ar,{},game_params)
     # number of wins    
-    
-
+    print tester.result()
+    tester.save_result()
 # -------------------End of -------------------------
 if __name__ == '__main__':
     main()

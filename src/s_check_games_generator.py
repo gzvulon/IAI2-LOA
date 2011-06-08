@@ -10,7 +10,18 @@ import sys
 import utils
 
 GAME_SET_NAME = "gameset"
-NUMBER_OF_GAME_PAIRS = 2
+NUMBER_OF_GAME_PAIRS = 100
+
+MIN_SIZE =  5
+MAX_SIZE =  15
+
+MAX_TIME = 20.0
+MIN_TIME = 0.5
+
+MIN_TURNS = 20
+MAX_TURNS = 70
+
+
 
 def generate_games(num_of_games,seed = None, setname =GAME_SET_NAME):
     
@@ -25,9 +36,9 @@ def generate_games(num_of_games,seed = None, setname =GAME_SET_NAME):
     game_params_arr = [None]*num_of_games
     for i in range(0,num_of_games):
         
-        board_size = rand.randint(5,15)
-        turns = 2 #rand.randint(10,70)
-        turn_time_limit = rand.uniform(0.5,12.0)
+        board_size = rand.randint(MIN_SIZE,MAX_SIZE)
+        turns = rand.randint(MIN_TURNS,MAX_TURNS)
+        turn_time_limit = rand.uniform(0.5,MAX_TIME)
         
         game_params_arr[i] = {
             'size' : board_size,

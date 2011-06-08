@@ -6,7 +6,7 @@ from s_agents import RandomAgent
 from s_check_games_generator import load_games
 
 def main():
-    tester = GameTester("Heuristic Params1")
+    tester = GameTester("Heuristic Params2")
     
     game_params_arr = load_games()
     
@@ -23,7 +23,9 @@ def main():
     
     for game_params in game_params_arr:
         tester.run_game_pair(a,a1_params,ar,{},game_params)
-    # number of wins    
+    # number of wins 
+    print tester.result()
+    tester.save_result()   
 # -------------------End of -------------------------
 if __name__ == '__main__':
     main()

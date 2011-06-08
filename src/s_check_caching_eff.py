@@ -3,10 +3,10 @@ from s_weighted_evaluator import WeightedEvaluatorH
 from s_working_agent import AnytimeSmartAlphaBetaPrintAgentParams
 from s_game_runner import GameTester
 
-TURNS_LIST = [2]#[20,60,100]
+TURNS_LIST = [20,60,100]
 
 def main():
-    tester = GameTester("Caching Effectiveness")
+    tester = GameTester("Caching Effectiveness",same_agents=False)
     
     a1_params = {
       'caching':True,
@@ -29,15 +29,16 @@ def main():
     
     for turns in TURNS_LIST:
         game_params = {
-            'size' : 10,
+            'size' : 8,
             'turns_left' : turns,
         
-            'turn_time_limit' : 50.0,
+            'turn_time_limit' :  50.0,
             'setup_time_limit' : 5.0
         }
         tester.run_game_pair(a1,a1_params,a2,a2_params,game_params)
 
-    # pair wins
+    print tester.result()
+    tester.save_result()
 
 # -------------------End of -------------------------
 if __name__ == '__main__':

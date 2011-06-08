@@ -6,10 +6,10 @@ from s_game_runner import GameTester
 init_depth_LIST = [1,2,3,4,5]
 
 def main():
-    tester = GameTester("Caching Nodes Explored")
+    tester = GameTester("Caching Nodes Explored", same_agents=False)
     
     game_params = {
-        'size' : 10,
+        'size' : 8,
         'turns_left' : 80,
     
         'turn_time_limit' : 20.0,
@@ -30,7 +30,7 @@ def main():
         a2_params = {
           'caching':False,
           'init_max_depth': init_depth,
-          'depth_delta':1,
+          'depth_delta':100,
           'use_iterative' : ITERATIVE,
           'evaluator' : WeightedEvaluatorH(0.3, 0.0, 0.05, 0.25)
                     
@@ -39,7 +39,9 @@ def main():
         tester.run_game_pair(a1,a1_params,a2,a2_params,game_params)
         # check hit rate
         # number of node / times
-
+    print "==========================="
+    print tester.result()
+    tester.save_result()
 # -------------------End of -------------------------
 if __name__ == '__main__':
     main()

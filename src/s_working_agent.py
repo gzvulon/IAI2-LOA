@@ -175,15 +175,20 @@ class AnytimeSmartAlphaBetaPrintAgentParams(GameAgent):
     # -------------------------- AUX --------------------------------
     def __str__(self):
         sb = [
+        "@@@@@@Agent",
+        self.get_name(),
         "== Node statistics ==",
         self.node_statistics,
         "== Turn_cache ==",
-        self.turn_cache,
-        "== Time statistics== ",
-        self.time_statistics]
+        self.turn_cache #,
+        #"== Time statistics== ",
+        #self.time_statistics
+        ]
         
         res = "\n".join([str(x) for x in sb])
         return res
+    def __repr__(self):
+        return self.__str__()
         
         
         
