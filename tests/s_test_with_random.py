@@ -51,7 +51,7 @@ def main():
     a1 = AnytimeSmartAlphaBetaPrintAgentParams
     a2 = RandomAgent
     
-    for size in [5,6]:
+    for size in [50,80]:
         game_params = {
             'size' : size,
             'turns_left' : 2,
