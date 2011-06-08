@@ -26,7 +26,7 @@ class TimeStatisticsNone():
         return self.measure_lambda(f, f.__name__, *args)
     
 
-class MeasureUnitBase():
+class MeasureUnitBase(object):
     def __init__(self):
         self.times = 0
         self.average = 0.0
@@ -49,9 +49,9 @@ class MeasureUnitBase():
         return self.__str__()
 
 
-class MeasureUnit():
+class MeasureUnit(MeasureUnitBase):
     def __init__(self):
-        MeasureUnitBase.__init__(self)
+        super(MeasureUnit,self).__init__()
 
     def start_measure(self):
         self.start = time.clock()
@@ -61,7 +61,6 @@ class MeasureUnit():
         self.add_measurment(running_time)
         
         
-
 class TimeStatisticsClass():
     
     def __init__(self):
@@ -73,11 +72,6 @@ class TimeStatisticsClass():
     def stop_measure(self,name):
         self.stats[name].stop_measure()
         
-#    def restart_measure(self, name):
-#        ''' stops previous measurements and starts new '''
-#        self.stop_measure()
-#        self.start_measure(name)
-    
     def measure_lambda(self,f,name, *args):
         self.start_measure(name)
         retval = f(*args)
@@ -132,7 +126,6 @@ class DepthUnit():
 class DepthList():
     
     def __init__(self,tag):
-        self.__init__([])
         self.depths = {}
         self.tag = tag
 
@@ -140,18 +133,22 @@ class DepthList():
         depth_unit = self.depths.setdefault(maxdepth,DepthUnit(maxdepth))
         depth_unit.start()
         self.last = depth_unit
+        self.last_depth = maxdepth
         
     def inc_last(self):
         self.last.add_one()
     
     def stop(self):
-        self.finish_last()
+        self.last.finish()
         
     def get_statistics(self):
-        str = self.tag + " Stats :\n"
+        s = self.tag + " Stats :\n"
         for depth, unit in sorted(self.depths.items()):
-            str += "d:" + str(depth) + ". S=" + str(unit)
-        return str
+            s += "Max depth:" + str(depth) + ".Stats:" + str(unit)
+        return s
+    
+    def clear_last(self):
+        del self.depths[self.last_depth]
     
     def __str__(self):
         return self.get_statistics()
@@ -160,26 +157,42 @@ class DepthList():
         return self.__str__()
 
 
-class VisitsStatistics():
+class VisitsStatisticsClass():
     
-    def __init__(self):
+    def __init__(self,tag=None):
         self.stats = {}
+        self.tag = tag
         
-    def start_monitor(self,tag , maxdepth):
-        self.stats.setdefault(tag,DepthList(tag)).add(maxdepth)
+    def _getTag(self,tag):
+        DEFAULT_TAG = "default"
+        if not tag is None:
+            return tag
+        elif not self.tag is None:
+            return self.tag
+        return DEFAULT_TAG
+    
+    def start_monitor(self, maxdepth, tag=None):
+        the_tag = self._getTag(tag)
+        self.stats.setdefault(the_tag,DepthList(the_tag)).add(maxdepth)
         pass
     
-    def visit_node(self, tag):
-        self.stats[tag].inc_last()
+    def visit_node(self, tag=None):
+        the_tag = self._getTag(tag)
+        self.stats[the_tag].inc_last()
         
-    def stop_monitor(self, tag, maxdepth):
-        self.stats[tag].stop()
+    def stop_monitor(self, maxdepth, tag=None):
+        the_tag = self._getTag(tag)
+        self.stats[the_tag].stop()
         
     def get_statistics(self):
-        str = " VisitsStatistics :\n"
+        s = " VisitsStatistics :\n"
         for tag, dl in self.stats.items():
-            str += "d:" + str(tag) + ". DepthList=" + str(dl)
-        return str
+            s += "d:" + str(tag) + ". DepthList=" + str(dl)
+        return s
+    
+    def clear_monitor(self,tag=None):
+        the_tag = self._getTag(tag)
+        self.stats[the_tag].clear_last()
     
     def __str__(self):
         return self.get_statistics()

@@ -7,7 +7,7 @@ Created on Jun 3, 2011
 import time
 import inspect
 from gc import disable as start_timer
-from gc import enable as end_timer
+from gc import enable as stop_timer
 from alpha_beta import INFINITY
 
 def whosdaddy():
@@ -42,6 +42,7 @@ class EndTimerClass():
         
     def stop(self,end_time=None):
         self.end_time = None
+        stop_timer()
             
     def check(self,name="not set",safe_delta=0):
         if self.end_time == None: return

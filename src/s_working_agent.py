@@ -1,6 +1,7 @@
 from game_agent import GameAgent
 from s_alpha_beta import  SmartAlphaBetaSearch
-from s_statistics import GTimeStatistics
+from s_statistics import GTimeStatistics, VisitsStatisticsClass,\
+    TimeStatisticsClass
 from s_enums import QUAD_TABLE_TAG, ITERATIVE, NON_ITERATIVE, QUAD_WINNER
 from s_quad_table import QuadTable, QuadTableNoUpdate
 from s_end_timer import EndTimer, TimeOutException
@@ -11,7 +12,11 @@ from random import Random
 class AnytimeSmartAlphaBetaPrintAgentParams(GameAgent):
     # ----------------------- Info API -------------------------------
     def get_name(self):
-        return self.alphaBeta.get_name()
+        return "Smart Anytime Agent. Params: caching=%s, depth_delta=%s, use_iterative=%s, init_max_depth=%s" %(         
+        self.caching,
+        self.depth_delta,
+        self.use_iterative,
+        self.init_max_depth)
     
     def myinit(self, caching, init_max_depth, depth_delta,  use_iterative, evaluator):
         ''' 
@@ -28,6 +33,10 @@ class AnytimeSmartAlphaBetaPrintAgentParams(GameAgent):
         #TODO:
         self.winner_check = QUAD_WINNER 
         self.evaluator = evaluator
+        
+        #statistics
+        self.node_statistics = VisitsStatisticsClass(self.get_name())
+        self.time_statistics = TimeStatisticsClass()
     
     # ---------------------- Timer ----------------------------------
     def start_timer(self):
@@ -46,7 +55,7 @@ class AnytimeSmartAlphaBetaPrintAgentParams(GameAgent):
         self.prev_state = game_state
         
         #save params
-        self.safe_delta = 0.25
+        self.safe_delta = 0.5
         self.corrected_turn_time_limit = turn_time_limit - self.safe_delta
         self.player = player
 
@@ -123,6 +132,7 @@ class AnytimeSmartAlphaBetaPrintAgentParams(GameAgent):
             #save our turn and its info set: to be able calculate next one
 
         except TimeOutException: #TODO for release handle all exceptios
+            self.node_statistics.clear_monitor()
             pass
         
         # save data about our move
@@ -130,6 +140,7 @@ class AnytimeSmartAlphaBetaPrintAgentParams(GameAgent):
         self.prev_state = self.res_state
         self.info_set   = self.res_info_set 
         self.stop_timer()
+        
         u_res = self.turn_cache.get(self.res_state, self.utility, self.res_info_set)
         print u_res
         return self.res_action
@@ -144,15 +155,33 @@ class AnytimeSmartAlphaBetaPrintAgentParams(GameAgent):
         curr_max_depth = init_max_depth
         print init_max_depth
         # print "time left", end_time - time.clock(), "d=", curr_max_depth
-        alg = SmartAlphaBetaSearch(self.player, self.utility, self.turn_cache, self.winner_check, self.use_quads)
+        alg = SmartAlphaBetaSearch(self.player, self.utility, self.turn_cache, self.time_statistics, self.node_statistics, self.winner_check, )
         
         while True:
             EndTimer.check("start search")
+            
+            self.node_statistics.start_monitor(curr_max_depth)
             r = alg.search(current_state, curr_max_depth, info_set)
+            self.node_statistics.stop_monitor(curr_max_depth)
+            
             self.res_action, self.res_state, self.res_info_set = r
             print "Solution at depth:", curr_max_depth, "  time left:", EndTimer.time_left()
             curr_max_depth += self.depth_delta 
             
+    # -------------------------- AUX --------------------------------
+    def __str__(self):
+        sb = [
+        "== Node statistics ==",
+        self.node_statistics,
+        "== Turn_cache ==",
+        self.turn_cache,
+        "== Time statistics== ",
+        self.time_statistics]
+        
+        res = "\n".join([str(x) for x in sb])
+        return res
+        
+        
         
         
 

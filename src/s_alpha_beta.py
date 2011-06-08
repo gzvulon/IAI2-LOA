@@ -1,14 +1,6 @@
-from s_heuristics import winner_heuristics
-from random import Random
-import time
-from s_end_timer import checkTime, TimeOutException
-from s_turn_cache import TurnCache, NoneTurnCache
 from loa_game import LinesOfActionState
 from s_end_timer import EndTimer
-from s_statistics import GTimeStatistics
 from s_common_ops import random_tag
-from s_quad_table import QuadTable
-import s_quad_table
 from s_enums import QUAD_TABLE_TAG, SIMPLE_WINNER, QUAD_WINNER, INFINITY,\
     DONT_USE_QUADS
 
@@ -22,7 +14,7 @@ class SmartAlphaBetaSearch:
     search by depth alone and uses an evaluation function (utility).
     '''
     
-    def __init__(self, player, utility, turn_cache, winner_check=SIMPLE_WINNER, use_quads=DONT_USE_QUADS):
+    def __init__(self, player, utility, turn_cache, time_statistics, node_statistics, winner_check=SIMPLE_WINNER):
         '''
         Constructor.
         
@@ -35,7 +27,11 @@ class SmartAlphaBetaSearch:
         self.turn_cache = turn_cache
         #self.max_depth = max_depth
         self.utility = utility
-        #self.info_
+        
+        self.node_statistics = node_statistics
+        self.time_statistics = time_statistics
+        
+        
         
         if winner_check==QUAD_WINNER:
             self.f_checkWinner = self._checkWinnerEuler
@@ -55,8 +51,6 @@ class SmartAlphaBetaSearch:
         # on each search this is renewed!
         #
         best_value = -INFINITY
-        
-       
         
         EndTimer.check(name="a")
         #successors = current_state.getSuccessors()
@@ -88,14 +82,17 @@ class SmartAlphaBetaSearch:
                        value - node value
                  False,0 - continue searching
         '''
-        EndTimer.check("_need_return1")
+        EndTimer.check("_need_return10")
+        #every (min/max Value) starts with this
+        self.node_statistics.visit_node()
+        
         # check if node is terminate
         w = self.f_checkWinner(state,info_set)
         # if it is : return its value (-1 for enemy, +1 for us)
         if w != 0:
             return True,w
         
-        EndTimer.check("_need_return2")
+        EndTimer.check("_need_return20")
         # if reached depth limit: evaluate node using heuristics
         if depth >= max_depth:
             u_res = self.turn_cache.get(state, self.utility, info_set)
@@ -119,9 +116,9 @@ class SmartAlphaBetaSearch:
         
         EndTimer.check(name="d2")
         str_key = "_maxValue.successors.items()  d:{%s} tag{1%s}" % (depth,random_tag())
-        GTimeStatistics.start_measure(str_key)
+        self.time_statistics.start_measure(str_key)
         successors_items = successors.items()
-        GTimeStatistics.stop_measure(str_key)
+        self.time_statistics.stop_measure(str_key)
         
         
         for action, successor_state in successors_items:
@@ -152,9 +149,9 @@ class SmartAlphaBetaSearch:
         # -- reordering --
         #ordered_successors = self.f_oreder(successors,depth,max_depth)
         str_key = "_minValue.successors.items() d:{%s} tag{%s}" % (depth,random_tag())
-        GTimeStatistics.start_measure(str_key)
+        self.time_statistics.start_measure(str_key)
         successors_items = successors.items()
-        GTimeStatistics.stop_measure(str_key)
+        self.time_statistics.stop_measure(str_key)
         
         for action, successor_state in successors_items:
             EndTimer.check(name="g")
@@ -216,26 +213,6 @@ class SmartAlphaBetaSearch:
     
     # ------------------------ iterative / non iterative ----------------------
     
-
-#class AnyTimeSmartAlphaBeta():
-#    '''The Main Shit'''
-#    
-#    def get_name(self):
-#        return "AnyTimeSmartAlphaBeta"
-#    
-#    def __init__(self, player, init_max_depth, 
-#                 utility, winner_check=SIMPLE_WINNER, 
-#                 depth_delta=1, caching =False):
-#        self.player = player
-#        self.init_max_depth = init_max_depth
-#        self.utility = utility
-#        self.winner_check = winner_check
-#        self.rand = Random(0)
-#        self.depth_delta = depth_delta
-#        
-
-        
-            
    
         
         

@@ -31,10 +31,10 @@ a1_params = {
 
 a2 = AnytimeSmartAlphaBetaPrintAgentParams()
 a2_params = {
-  'caching':False,
-  'init_max_depth': 3,
+  'caching':True,
+  'init_max_depth': 2,
   'depth_delta':1,
-  'use_iterative' : NON_ITERATIVE,
+  'use_iterative' : ITERATIVE,
   'evaluator' : CenterMassEvaluator() 
             
 }
@@ -42,7 +42,7 @@ a2_params = {
 a3 = AnytimeSmartAlphaBetaPrintAgentParams()
 a3_params = {
   'caching':True,
-  'init_max_depth': 3,
+  'init_max_depth': 2,
   'depth_delta':1,
   'use_iterative' : ITERATIVE,
   'evaluator' : WeightedEvaluatorH(0.75, 0.3, 0.7, 0.25)
@@ -56,19 +56,17 @@ a3.myinit(**a3_params)
 
 ar = RandomAgent()
 agents[ WHITE ] = ar
-agents[ BLACK ] = a3
+agents[ BLACK ] = a2
 
-state = LinesOfActionState(8, 40)
+state = LinesOfActionState(8, 4)
 
 try:
-    winner = GameRunner(state, agents, 5.0 , 1).run()
+    winner = GameRunner(state, agents, 10.0 , 1).run()
     print 'Winner:', winner
 
 except Exception, e:
     print e
     raise
-finally:    
-    print "a3", a3.turn_cache
-    #print "cache time stat", times_stat
-    print "time stat:", GTimeStatistics
-    print EndTimer
+finally:
+    print a2    
+
