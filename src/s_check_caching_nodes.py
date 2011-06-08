@@ -3,6 +3,8 @@ from s_weighted_evaluator import WeightedEvaluatorH
 from s_working_agent import AnytimeSmartAlphaBetaPrintAgentParams
 from s_game_runner import GameTester
 
+init_depth_LIST = [1,2,3,4,5]
+
 def main():
     tester = GameTester("Caching Nodes Explored")
     
@@ -14,7 +16,7 @@ def main():
         'setup_time_limit' : 5.0
     }
     
-    for init_depth in [1,2,3,4,5]:
+    for init_depth in init_depth_LIST:
         a1_params = {
           'caching':True,
           'init_max_depth': init_depth,

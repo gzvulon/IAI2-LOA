@@ -4,7 +4,7 @@ Created on Jun 8, 2011
 
 @author: inesmeya
 """
-from loa_game import LinesOfActionState, BLACK, WHITE
+from loa_game import LinesOfActionState, BLACK, WHITE, TIE
 from game_runner import GameRunner
 from s_working_agent import AnytimeSmartAlphaBetaPrintAgentParams
 
@@ -36,12 +36,16 @@ class  GameTester():
         
         except Exception, e:
             print e
+            print "Assuming winner is Tie"
+            winner = TIE
             raise
         finally:
             print "Test name"
             for p,a in agents.items():
                 print "Player ", p
-                print a   
+                print a
+        # Statistics
+           
     
     def run_game_pair(self, agent_class1, params1, agent_class2, params2, game_params):
         '''agent_class1 

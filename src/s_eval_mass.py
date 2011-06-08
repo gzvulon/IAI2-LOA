@@ -73,6 +73,8 @@ class CenterMassTable(UpdatableTable):
         
 
 class CenterMassEvaluator(Evaluator):
+    def __str__(self):
+        return "CenterMassEvaluator"
     
     def distance(self,(x1,y1),(x2,y2)):
         h = abs(y1-y2)

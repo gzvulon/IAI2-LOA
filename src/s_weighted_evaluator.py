@@ -10,6 +10,14 @@ from s_common_ops import other_player
 from s_quad_evaluator import QuadEvaluator
 
 class WeightedEvaluatorH():
+    def __str__(self):
+        return "WeightedEvaluatorH wanted_mass=%s, weight_before=%s, weight_after=%s, weight_enemy=%s" % (
+        self.wanted_mass, 
+        self.weight_before,
+        self.weight_after, 
+        self.weight_enemy                                                                                                           
+        )   
+    
     def __init__(self, wanted_mass, weight_before, weight_after, weight_enemy):
         '''
         @param weight_before: weight of euler

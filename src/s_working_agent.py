@@ -14,11 +14,13 @@ from s_quad_evaluator import QuadEvaluator
 class AnytimeSmartAlphaBetaPrintAgentParams(GameAgent):
     # ----------------------- Info API -------------------------------
     def get_name(self):
-        return "Smart Anytime Agent. Params: caching=%s, depth_delta=%s, use_iterative=%s, init_max_depth=%s" %(         
+        return "Smart Anytime Agent. Params: caching=%s, depth_delta=%s, use_iterative=%s, init_max_depth=%s, evaluator=%s" %(         
         self.caching,
         self.depth_delta,
         self.use_iterative,
-        self.init_max_depth)
+        self.init_max_depth,
+        self.evaluator
+        )
     
     def myinit(self, caching, init_max_depth, depth_delta,  use_iterative, evaluator):
         ''' 

@@ -3,6 +3,8 @@ from s_weighted_evaluator import WeightedEvaluatorH
 from s_working_agent import AnytimeSmartAlphaBetaPrintAgentParams
 from s_game_runner import GameTester
 
+TURNS_LIST = [2]#[20,60,100]
+
 def main():
     tester = GameTester("Caching Effectiveness")
     
@@ -25,7 +27,7 @@ def main():
     a2 = AnytimeSmartAlphaBetaPrintAgentParams
     
     
-    for turns in [20,60,100]:
+    for turns in TURNS_LIST:
         game_params = {
             'size' : 10,
             'turns_left' : turns,
