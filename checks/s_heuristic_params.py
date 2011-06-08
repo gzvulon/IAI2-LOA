@@ -12,8 +12,8 @@ def main():
     game_params_arr = []
     for i in range(0,20):
         board_size = rand.randint(5,15)
-        turns = rand.randint(10,80)
-        turn_time_limit = rand.randint(0.1,15)
+        turns = rand.randint(10,70)
+        turn_time_limit = rand.randint(0.1,12)
         
         game_params_arr[i] = {
             'size' : board_size,
@@ -56,15 +56,17 @@ def main():
     ar = RandomAgent
     
     tester = GameTester("Heuristic Params")
-    for _ in range(0,100):
-        tester.run_game_pair(a1,a1_params,ar,{},game_params_arr[rand.randint(0,20)])
+    for _ in range(0,50):
+        tester.run_game_pair(a1,a1_params,ar,{},game_params_arr[rand.randint(0,10)])
         
-    for _ in range(0,100):
-        tester.run_game_pair(a2,a2_params,ar,{},game_params_arr[rand.randint(0,20)])
+    for _ in range(0,50):
+        tester.run_game_pair(a2,a2_params,ar,{},game_params_arr[rand.randint(0,10)])
     
-    for _ in range(0,100):
-        tester.run_game_pair(a3,a3_params,ar,{},game_params_arr[rand.randint(0,20)])
-    # number of wins
+
+    for _ in range(0,50):
+        tester.run_game_pair(a3,a3_params,ar,{},game_params_arr[rand.randint(0,10)])
+    # number of wins    
+    
 
 # -------------------End of -------------------------
 if __name__ == '__main__':

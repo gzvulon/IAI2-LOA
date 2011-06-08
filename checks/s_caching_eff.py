@@ -10,9 +10,7 @@ def main():
       'depth_delta':1,
       'use_iterative' : ITERATIVE,
       'evaluator' : WeightedEvaluatorH(0.3, 0.0, 0.05, 0.25)
-                
     }
-    
     a1 = AnytimeSmartAlphaBetaPrintAgentParams
 
     a2_params = {
@@ -21,7 +19,6 @@ def main():
       'depth_delta':1,
       'use_iterative' : ITERATIVE,
       'evaluator' : WeightedEvaluatorH(0.3, 0.0, 0.05, 0.25)
-                
     }
     a2 = AnytimeSmartAlphaBetaPrintAgentParams
     
@@ -35,7 +32,7 @@ def main():
             'setup_time_limit' : 5.0
         }
         tester.run_game_pair(a1,a1_params,a2,a2_params,game_params)
-    
+
     # pair wins
 
 # -------------------End of -------------------------
