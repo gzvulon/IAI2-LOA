@@ -15,7 +15,7 @@ a1_params = {
   'init_max_depth': 2,
   'depth_delta':1,
   'use_iterative' : ITERATIVE,
-  'evaluator' :  WeightedEvaluatorH(15, 0.55, 0.3, 0.7, 0.25)
+  'evaluator' :  WeightedEvaluatorH(0.55, 0.3, 0.7, 0.25)
 }
 
 a2 = AnytimeSmartAlphaBetaPrintAgentParams()
@@ -24,7 +24,7 @@ a2_params = {
   'init_max_depth': 2,
   'depth_delta':1,
   'use_iterative' : ITERATIVE,
-  'evaluator' : CenterMassEvaluator(15)
+  'evaluator' : WeightedEvaluatorH(0.55, 0.3, 0.7, 0.25)
 }
 
 a1.myinit(**a1_params)
