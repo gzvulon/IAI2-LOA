@@ -6,21 +6,16 @@ Created on May 27, 2011
 """
 import st_import 
 
-from s_agents import  DummyAgent, RandomAgent
-from loa_game import WHITE, BLACK, LinesOfActionState
+from s_agents import   RandomAgent
 from game_runner import GameRunner
-from alpha_beta import INFINITY
-from s_statistics import GTimeStatistics
-from s_end_timer import EndTimer
 from s_enums import ITERATIVE, NON_ITERATIVE
 
 from s_weighted_evaluator import WeightedEvaluatorI, WeightedEvaluatorH
 from s_eval_mass import CenterMassEvaluator
 from s_working_agent import AnytimeSmartAlphaBetaPrintAgentParams
+from s_game_runner import run_game
 
-
-agents = {}
-a1 = AnytimeSmartAlphaBetaPrintAgentParams()
+'''
 a1_params = {
   'caching':True,
   'init_max_depth': 4,
@@ -29,7 +24,6 @@ a1_params = {
   'evaluator' :  WeightedEvaluatorI(0.55, 0.3, 0.7, 0.25)       
 }
 
-a2 = AnytimeSmartAlphaBetaPrintAgentParams()
 a2_params = {
   'caching':True,
   'init_max_depth': 2,
@@ -38,8 +32,9 @@ a2_params = {
   'evaluator' : CenterMassEvaluator() 
             
 }
+'''
 
-a3 = AnytimeSmartAlphaBetaPrintAgentParams()
+# -------------------Example -------------------------
 a3_params = {
   'caching':True,
   'init_max_depth': 2,
@@ -49,24 +44,18 @@ a3_params = {
             
 }
 
+game_params = {
+    'size' : 8,
+    'turns_left' : 4,
 
-a1.myinit(**a1_params)
-a2.myinit(**a2_params)
-a3.myinit(**a3_params)
+    'turn_time_limit' : 10.0,
+    'setup_time_limit' : 1.0
+}
 
-ar = RandomAgent()
-agents[ WHITE ] = ar
-agents[ BLACK ] = a2
+a1 = AnytimeSmartAlphaBetaPrintAgentParams
+a2 = RandomAgent
 
-state = LinesOfActionState(8, 4)
+run_game(a1,a3_params,a2,{},game_params,"test")
+# -------------------End of -------------------------
 
-try:
-    winner = GameRunner(state, agents, 10.0 , 1).run()
-    print 'Winner:', winner
-
-except Exception, e:
-    print e
-    raise
-finally:
-    print a2    
 
