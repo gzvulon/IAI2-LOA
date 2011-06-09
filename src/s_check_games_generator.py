@@ -12,8 +12,8 @@ import utils
 GAME_SET_NAME = "gameset"
 NUMBER_OF_GAME_PAIRS = 1
 
-MIN_SIZE =  5
-MAX_SIZE =  10
+MIN_SIZE =  15
+MAX_SIZE =  15
 
 MAX_TIME = 19.0
 MIN_TIME = 10.0

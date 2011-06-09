@@ -23,7 +23,7 @@ class AnytimeSmartAlphaBetaPrintAgentParams(GameAgent):
         self.evaluator
         )
     
-    def myinit(self, caching, init_max_depth, depth_delta,  use_iterative, evaluator):
+    def myinit(self, caching, init_max_depth, depth_delta,  use_iterative, evaluator, max_states_in_cache=15000):
         ''' 
         use string names names
         allow to confine agent'''
@@ -38,7 +38,7 @@ class AnytimeSmartAlphaBetaPrintAgentParams(GameAgent):
         #TODO:
         self.winner_check = QUAD_WINNER 
         self.evaluator = evaluator
-        self.max_states_in_cache = 10000
+        self.max_states_in_cache = max_states_in_cache
         
         #statistics
         self.node_statistics = VisitsStatisticsClass(self.get_name())

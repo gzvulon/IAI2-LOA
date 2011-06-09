@@ -148,7 +148,8 @@ class DepthList():
         return s
     
     def clear_last(self):
-        del self.depths[self.last_depth]
+        if self.depths.has_key(self.last_depth):
+            del self.depths[self.last_depth]
     
     def __str__(self):
         return self.get_statistics()

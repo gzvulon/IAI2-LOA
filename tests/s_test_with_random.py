@@ -51,12 +51,12 @@ def main():
     a1 = AnytimeSmartAlphaBetaPrintAgentParams
     a2 = RandomAgent
     
-    for size in [7]:
+    for size in [15]:
         game_params = {
             'size' : size,
-            'turns_left' : 2,
+            'turns_left' : 20,
         
-            'turn_time_limit' : 2.0,
+            'turn_time_limit' : 10.0,
             'setup_time_limit' : 1.0
         }
         tester.run_game_pair(a1,a3_params,a2,{},game_params)
