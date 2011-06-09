@@ -56,6 +56,14 @@ class  GameTester():
             for p,a in agents.items():
                 print "Player ", p
                 print a
+        #destroy caching
+        try:
+            agent1.destroy_cache()
+            agent2.destroy_cache()
+
+        except:
+            pass
+                
         # Statistics
         if self.same_agents == False:
             res = ("\nGame",game_params,"Agents:\n",agent1,agent2,winner)

@@ -206,7 +206,7 @@ class AnytimeSmartAlphaBetaPrintAgentParams(GameAgent):
 
     def destroy_cache(self):
         self.turn_cache.destroy_cache()
-        print 'collected after killing cache:',n
+        print 'collected after killing cache:', self.collected
         
         
         

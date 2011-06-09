@@ -313,3 +313,8 @@ class TurnCacheCleanable():
     def __repr__(self):
         return self.__str__()
     
+    def destroy_cache(self):
+        del self.active_checkers_left_table
+        del self.passive_checkers_left_table
+    
+    
