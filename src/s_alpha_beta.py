@@ -118,10 +118,10 @@ class SmartAlphaBetaSearch:
         #ordered_successors = self.f_oreder(successors,depth,max_depth)
         
         EndTimer.check(name="d2")
-        str_key = "_maxValue.successors.items()  d:{%s} tag{1%s}" % (depth,random_tag())
-        self.time_statistics.start_measure(str_key)
+        #str_key = "_maxValue.successors.items()  d:{%s} tag{1%s}" % (depth,random_tag())
+        #self.time_statistics.start_measure(str_key)
         successors_items = successors.items()
-        self.time_statistics.stop_measure(str_key)
+        #self.time_statistics.stop_measure(str_key)
         
         
         for action, successor_state in successors_items:
@@ -152,10 +152,10 @@ class SmartAlphaBetaSearch:
         
         # -- reordering --
         #ordered_successors = self.f_oreder(successors,depth,max_depth)
-        str_key = "_minValue.successors.items() d:{%s} tag{%s}" % (depth,random_tag())
-        self.time_statistics.start_measure(str_key)
+        #str_key = "_minValue.successors.items() d:{%s} tag{%s}" % (depth,random_tag())
+        #self.time_statistics.start_measure(str_key)
         successors_items = successors.items()
-        self.time_statistics.stop_measure(str_key)
+        #self.time_statistics.stop_measure(str_key)
         
         for action, successor_state in successors_items:
             EndTimer.check(name="g")
