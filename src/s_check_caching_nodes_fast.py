@@ -3,10 +3,10 @@ from s_weighted_evaluator import WeightedEvaluatorH
 from s_working_agent import AnytimeSmartAlphaBetaPrintAgentParams
 from s_game_runner import GameTester
 
-threshold_LIST = [10000, 25000, 50000]
+init_depth_LIST = [1,2,3]
 
 def main():
-    tester = GameTester("Caching Nodes threshold", same_agents=False)
+    tester = GameTester("Caching Nodes Explored Fast", same_agents=False)
     
     game_params = {
         'size' : 8,
@@ -16,21 +16,20 @@ def main():
         'setup_time_limit' : 5.0
     }
     
-    for threshold in threshold_LIST:
+    for init_depth in init_depth_LIST:
         a1_params = {
           'caching':True,
-          'init_max_depth': 2,
+          'init_max_depth': init_depth,
           'depth_delta':100,
           'use_iterative' : ITERATIVE,
-          'evaluator' : WeightedEvaluatorH(0.3, 0.0, 0.05, 0.25),
-          'max_states_in_cache' : threshold
+          'evaluator' : WeightedEvaluatorH(0.3, 0.0, 0.05, 0.25)
                     
         }
         a1 = AnytimeSmartAlphaBetaPrintAgentParams
     
         a2_params = {
           'caching':False,
-          'init_max_depth': 2,
+          'init_max_depth': init_depth,
           'depth_delta':100,
           'use_iterative' : ITERATIVE,
           'evaluator' : WeightedEvaluatorH(0.3, 0.0, 0.05, 0.25)
