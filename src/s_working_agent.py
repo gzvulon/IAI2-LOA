@@ -6,10 +6,11 @@ from s_enums import QUAD_TABLE_TAG, ITERATIVE, NON_ITERATIVE, QUAD_WINNER
 from s_quad_table import QuadTable, QuadTableNoUpdate
 from s_end_timer import EndTimer, TimeOutException
 from loa_game import LinesOfActionState
-from s_turn_cache import TurnCache, NoneTurnCache
+from s_turn_cache import TurnCache, NoneTurnCache, TurnCacheCleanable
 from random import Random
 from s_eval_mass import CenterMassEvaluator
 from s_quad_evaluator import QuadEvaluator
+import gc
 
 class AnytimeSmartAlphaBetaPrintAgentParams(GameAgent):
     # ----------------------- Info API -------------------------------
@@ -37,6 +38,7 @@ class AnytimeSmartAlphaBetaPrintAgentParams(GameAgent):
         #TODO:
         self.winner_check = QUAD_WINNER 
         self.evaluator = evaluator
+        self.max_states_in_cache = 10000
         
         #statistics
         self.node_statistics = VisitsStatisticsClass(self.get_name())
@@ -57,9 +59,11 @@ class AnytimeSmartAlphaBetaPrintAgentParams(GameAgent):
         # we need init state to determine if we have to
         self.init_state = game_state
         self.prev_state = game_state
+        self.last_game_state = game_state
+        self.collected = 0
         
         #save params
-        self.safe_delta = 0.5
+        self.safe_delta = 0.8
         self.corrected_turn_time_limit = turn_time_limit - self.safe_delta
         self.player = player
 
@@ -74,9 +78,8 @@ class AnytimeSmartAlphaBetaPrintAgentParams(GameAgent):
         }[self.use_iterative](game_state.board, game_state.size, initialize =True)
         
         # == Setup caching ==
-        if self.caching: self.turn_cache = TurnCache()
+        if self.caching: self.turn_cache = TurnCacheCleanable(self.max_states_in_cache)
         else:       self.turn_cache = NoneTurnCache()
-
  
      
     # ---------------------  The heuristics ------------------------------    
@@ -106,6 +109,7 @@ class AnytimeSmartAlphaBetaPrintAgentParams(GameAgent):
     
     def choose_default_answer(self,current_state):
         succesors = self.turn_cache.get(current_state, LinesOfActionState.getSuccessors)
+        #succesors = current_state.getSuccessors()
                 # choose default move randomly: 
         index = self.rand.randint(0, len(succesors)-1)
         res_action, res_state = succesors.items()[index]
@@ -115,6 +119,13 @@ class AnytimeSmartAlphaBetaPrintAgentParams(GameAgent):
     def move(self, game_state):
         self.start_timer()
         self.res_action, self.res_state = self.choose_default_answer(game_state)
+        self.turn_cache.clean_up_if_need(game_state, self.last_game_state)
+        
+        #gc stuff
+        gc.enable()
+        collected = self.time_statistics.measure_function(gc.collect)
+        self.collected += collected
+        gc.disable()
         
         try:
             EndTimer.check("m10")
@@ -138,7 +149,8 @@ class AnytimeSmartAlphaBetaPrintAgentParams(GameAgent):
         except TimeOutException: #TODO for release handle all exceptios
             self.node_statistics.clear_monitor()
             pass
-        
+        #save data about last gamestate
+        self.last_game_state = game_state
         # save data about our move
 
         self.prev_state = self.res_state
@@ -180,9 +192,11 @@ class AnytimeSmartAlphaBetaPrintAgentParams(GameAgent):
         "== Node statistics ==",
         self.node_statistics,
         "== Turn_cache ==",
-        self.turn_cache #,
-        #"== Time statistics== ",
-        #self.time_statistics
+        self.turn_cache ,
+        "== Time statistics== ",
+        self.time_statistics,
+        "== GC ==",
+        "Collected:%s" % self.collected
         ]
         
         res = "\n".join([str(x) for x in sb])

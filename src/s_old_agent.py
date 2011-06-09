@@ -96,7 +96,8 @@ class AnytimeSmartAlphaBetaPrintAgentParamsOld(GameAgent):
     
     
     def choose_default_answer(self,current_state):
-        succesors = self.turn_cache.get(current_state, LinesOfActionState.getSuccessors)
+        #succesors = self.turn_cache.get(current_state, LinesOfActionState.getSuccessors)
+        succesors = current_state.getSuccessors()
                 # choose default move randomly: 
         index = self.rand.randint(0, len(succesors)-1)
         res_action, res_state = succesors.items()[index]

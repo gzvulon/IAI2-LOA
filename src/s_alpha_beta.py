@@ -53,6 +53,7 @@ class SmartAlphaBetaSearch:
         best_value = -INFINITY
         
         EndTimer.check(name="a")
+        
         #successors = current_state.getSuccessors()
         successors = self.turn_cache.get(current_state, LinesOfActionState.getSuccessors)
         
@@ -109,8 +110,10 @@ class SmartAlphaBetaSearch:
         
         value = -INFINITY
         EndTimer.check(name="d1")
+        
         #successors = state.getSuccessors()
         successors = self.turn_cache.get(state, LinesOfActionState.getSuccessors)
+        
         # -- reordering --
         #ordered_successors = self.f_oreder(successors,depth,max_depth)
         
@@ -143,6 +146,7 @@ class SmartAlphaBetaSearch:
         value = INFINITY
         
         EndTimer.check(name="f")
+        
         #successors = state.getSuccessors()
         successors = self.turn_cache.get(state, LinesOfActionState.getSuccessors)
         
