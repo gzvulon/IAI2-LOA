@@ -10,17 +10,17 @@ import sys
 import utils
 
 GAME_SET_NAME = "gameset"
-NUMBER_OF_GAME_PAIRS = 30
+NUMBER_OF_GAME_PAIRS = 20
 
 MIN_SIZE =  5
 MAX_SIZE =  12
 
 MIN_TIME = 2.0
-MAX_TIME = 20.0
+MAX_TIME = 10.0
 
 
 MIN_TURNS = 20
-MAX_TURNS = 80
+MAX_TURNS = 70
 
 
 
@@ -49,7 +49,7 @@ def generate_games(num_of_games,seed = None, setname =GAME_SET_NAME):
             'setup_time_limit' : 10.0
         }
         
-        time_for_game = turn_time_limit * float(turns) / 2.0
+        time_for_game = turn_time_limit * float(turns) * 2.0
         total_time += time_for_game
     total_time_hours = total_time / 3600.0
     print "Total time hours for the '", setname, "' set (with seed=", seed, ") is ", total_time_hours

@@ -9,7 +9,7 @@ def main():
     tester = GameTester("Caching Nodes Explored", same_agents=False)
     
     game_params = {
-        'size' : 8,
+        'size' : 8,\
         'turns_left' : 60,
     
         'turn_time_limit' : 12.0,
