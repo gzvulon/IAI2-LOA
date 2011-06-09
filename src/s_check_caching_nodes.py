@@ -3,16 +3,16 @@ from s_weighted_evaluator import WeightedEvaluatorH
 from s_working_agent import AnytimeSmartAlphaBetaPrintAgentParams
 from s_game_runner import GameTester
 
-init_depth_LIST = [1,2,3,4,5]
+init_depth_LIST = [1,2,3,4]
 
 def main():
     tester = GameTester("Caching Nodes Explored", same_agents=False)
     
     game_params = {
         'size' : 8,
-        'turns_left' : 80,
+        'turns_left' : 60,
     
-        'turn_time_limit' : 20.0,
+        'turn_time_limit' : 12.0,
         'setup_time_limit' : 5.0
     }
     

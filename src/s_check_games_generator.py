@@ -10,16 +10,16 @@ import sys
 import utils
 
 GAME_SET_NAME = "gameset"
-NUMBER_OF_GAME_PAIRS = 100
+NUMBER_OF_GAME_PAIRS = 40
 
 MIN_SIZE =  5
 MAX_SIZE =  15
 
-MAX_TIME = 20.0
+MAX_TIME = 19.0
 MIN_TIME = 0.5
 
 MIN_TURNS = 20
-MAX_TURNS = 70
+MAX_TURNS = 60
 
 
 
