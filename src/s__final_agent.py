@@ -11,8 +11,9 @@ from random import Random
 from s_eval_mass import CenterMassEvaluator
 from s_quad_evaluator import QuadEvaluator
 import gc
+from s_weighted_evaluator import WeightedEvaluatorH
 
-class AnytimeSmartAlphaBetaPrintAgentParams(GameAgent):
+class AnytimeSmartAlphaBetaPrintAgentParamsFinal(GameAgent):
     # ----------------------- Info API -------------------------------
     def get_name(self):
         return "Smart Anytime Agent. Params: caching=%s, depth_delta=%s, use_iterative=%s, init_max_depth=%s, evaluator=%s" %(         
@@ -54,7 +55,15 @@ class AnytimeSmartAlphaBetaPrintAgentParams(GameAgent):
     # ---------------------- Game Interface ----------------------------------
     
     def setup(self, player, game_state, turn_time_limit, setup_time_limit):
-        #TODO: use my_init to config final agent
+        # use my_init to config final agent
+        a1_params = {
+                     'caching':True,
+                     'init_max_depth': 2,
+                     'depth_delta':1,
+                     'use_iterative' : ITERATIVE,
+                     'evaluator' : WeightedEvaluatorH(0.3, 0.0, 0.05, 0.25)
+         }
+        self.myinit(**a1_params)
         
         # we need init state to determine if we have to
         self.init_state = game_state
@@ -80,6 +89,8 @@ class AnytimeSmartAlphaBetaPrintAgentParams(GameAgent):
         # == Setup caching ==
         if self.caching: self.turn_cache = TurnCacheCleanable(self.max_states_in_cache)
         else:       self.turn_cache = NoneTurnCache()
+        
+        
  
      
     # ---------------------  The heuristics ------------------------------    
@@ -121,6 +132,11 @@ class AnytimeSmartAlphaBetaPrintAgentParams(GameAgent):
         self.res_action, self.res_state = self.choose_default_answer(game_state)
         self.turn_cache.clean_up_if_need(game_state, self.last_game_state)
         
+        #gc stuff
+        gc.enable()
+        collected = self.time_statistics.measure_function(gc.collect)
+        self.collected += collected
+        gc.disable()
         
         try:
             EndTimer.check("m10")
@@ -164,7 +180,7 @@ class AnytimeSmartAlphaBetaPrintAgentParams(GameAgent):
         '''        
         # start iterative search
         curr_max_depth = init_max_depth
-        print init_max_depth
+        #print init_max_depth
         # print "time left", end_time - time.clock(), "d=", curr_max_depth
         alg = SmartAlphaBetaSearch(self.player, self.utility, self.turn_cache, self.time_statistics, self.node_statistics, self.winner_check, )
         
@@ -176,7 +192,7 @@ class AnytimeSmartAlphaBetaPrintAgentParams(GameAgent):
             self.node_statistics.stop_monitor(curr_max_depth)
             
             self.res_action, self.res_state, self.res_info_set = r
-            print "Solution at depth:", curr_max_depth, "  time left:", EndTimer.time_left()
+            #print "Solution at depth:", curr_max_depth, "  time left:", EndTimer.time_left()
             curr_max_depth += self.depth_delta 
             
     # -------------------------- AUX --------------------------------
@@ -201,7 +217,7 @@ class AnytimeSmartAlphaBetaPrintAgentParams(GameAgent):
 
     def destroy_cache(self):
         self.turn_cache.destroy_cache()
-        print 'collected after killing cache:', self.collected
+        #print 'collected after killing cache:', self.collected
         
         
         
