@@ -1,6 +1,0 @@
-===========Heuristic Params2===============
-games:60
-agent1 wins:28
-agent1 paired wins:15
-agent2 wins:0
-agent2 paired wins:0
